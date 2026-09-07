@@ -19,6 +19,9 @@ class AppRoutes {
   static const String practiceListening = '/practice/listening';
   static const String practiceReading = '/practice/reading';
   static const String practiceWriting = '/practice/writing';
+  static const String practiceSkillIntro = '/practice/:skill/intro';
+  static const String practiceSkillSession = '/practice/:skill/session';
+  static const String practiceSkillResult = '/practice/:skill/result';
 
   // Nested Learn Routes
   static const String learnVocabulary = '/learn/vocabulary';

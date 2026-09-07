@@ -70,19 +70,19 @@ void main() {
       // Practice Subroutes
       router.go(AppRoutes.practiceSpeaking);
       await tester.pumpAndSettle();
-      expect(find.text('${AppStrings.speakingTitle} Module'), findsOneWidget);
+      expect(find.text('Session Overview'), findsOneWidget);
 
       router.go(AppRoutes.practiceListening);
       await tester.pumpAndSettle();
-      expect(find.text('${AppStrings.listeningTitle} Module'), findsOneWidget);
+      expect(find.text('Session Overview'), findsOneWidget);
 
       router.go(AppRoutes.practiceReading);
       await tester.pumpAndSettle();
-      expect(find.text('${AppStrings.readingTitle} Module'), findsOneWidget);
+      expect(find.text('Session Overview'), findsOneWidget);
 
       router.go(AppRoutes.practiceWriting);
       await tester.pumpAndSettle();
-      expect(find.text('${AppStrings.writingTitle} Module'), findsOneWidget);
+      expect(find.text('Session Overview'), findsOneWidget);
 
       // Shell Tab 3: Learn
       router.go(AppRoutes.learn);
@@ -206,7 +206,7 @@ void main() {
       await tester.tap(find.text(AppStrings.speakingTitle));
       await tester.pumpAndSettle();
 
-      expect(find.text('${AppStrings.speakingTitle} Module'), findsOneWidget);
+      expect(find.text('Session Overview'), findsOneWidget);
 
       // Subroute has a back button in FluentAppBar
       final backButton = find.byTooltip('Back');

@@ -13,6 +13,7 @@ class FakeDatabaseService implements DatabaseService {
 
   @override
   Future<void> initialize() async {
+    if (isInitialized) return;
     isInitialized = true;
     _tables[LessonsTable.tableName] = [];
     _tables[VocabularyTable.tableName] = [];
@@ -57,11 +58,17 @@ class FakeDatabaseService implements DatabaseService {
     if (where != null && whereArgs != null && whereArgs.isNotEmpty) {
       if (where.contains('date = ?')) {
         results = results.where((r) => r['date'] == whereArgs.first).toList();
+      } else if (where.contains('skill_type = ?')) {
+        results = results.where((r) => r['skill_type'] == whereArgs.first).toList();
       } else if (where.contains('key = ?')) {
         results = results.where((r) => r['key'] == whereArgs.first).toList();
       } else if (where.contains('id = ?')) {
         results = results.where((r) => r['id'] == whereArgs.first).toList();
       }
+    }
+
+    if (orderBy != null && orderBy.toLowerCase().contains('desc')) {
+      results = results.reversed.toList();
     }
 
     if (limit != null && results.length > limit) {
@@ -87,6 +94,8 @@ class FakeDatabaseService implements DatabaseService {
       if (where != null && whereArgs != null && whereArgs.isNotEmpty) {
         if (where.contains('date = ?')) {
           match = row['date'] == whereArgs.first;
+        } else if (where.contains('skill_type = ?')) {
+          match = row['skill_type'] == whereArgs.first;
         } else if (where.contains('key = ?')) {
           match = row['key'] == whereArgs.first;
         } else if (where.contains('id = ?')) {
@@ -107,7 +116,11 @@ class FakeDatabaseService implements DatabaseService {
     final list = _tables[table] ?? [];
     final before = list.length;
     if (where != null && whereArgs != null && whereArgs.isNotEmpty) {
-      list.removeWhere((row) => row['date'] == whereArgs.first || row['key'] == whereArgs.first);
+      list.removeWhere((row) =>
+          row['date'] == whereArgs.first ||
+          row['key'] == whereArgs.first ||
+          row['id'] == whereArgs.first ||
+          row['skill_type'] == whereArgs.first);
     } else {
       list.clear();
     }

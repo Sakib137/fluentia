@@ -6,22 +6,21 @@ import '../../features/challenge/presentation/challenge_screen.dart';
 import '../../features/grammar/presentation/grammar_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/learn/presentation/learn_screen.dart';
-import '../../features/listening/presentation/listening_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/onboarding/presentation/screens/placement_test_screen.dart';
 import '../../features/practice/presentation/practice_screen.dart';
+import '../../features/practice/presentation/screens/practice_intro_screen.dart';
+import '../../features/practice/presentation/screens/practice_result_screen.dart';
+import '../../features/practice/presentation/screens/practice_session_screen.dart';
 import '../../features/profile/presentation/notifications_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/profile/presentation/settings_screen.dart';
 import '../../features/progress/presentation/achievements_screen.dart';
 import '../../features/progress/presentation/progress_screen.dart';
 import '../../features/progress/presentation/statistics_screen.dart';
-import '../../features/reading/presentation/reading_screen.dart';
-import '../../features/speaking/presentation/speaking_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vocabulary/presentation/screens/word_detail_screen.dart';
 import '../../features/vocabulary/presentation/vocabulary_screen.dart';
-import '../../features/writing/presentation/writing_screen.dart';
 import 'app_routes.dart';
 import 'error_route_screen.dart';
 import 'scaffold_with_bottom_nav.dart';
@@ -85,22 +84,43 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'speaking',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const SpeakingScreen(),
+                    builder: (context, state) => const PracticeIntroScreen(skillId: 'speaking'),
                   ),
                   GoRoute(
                     path: 'listening',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const ListeningScreen(),
+                    builder: (context, state) => const PracticeIntroScreen(skillId: 'listening'),
                   ),
                   GoRoute(
                     path: 'reading',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const ReadingScreen(),
+                    builder: (context, state) => const PracticeIntroScreen(skillId: 'reading'),
                   ),
                   GoRoute(
                     path: 'writing',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const WritingScreen(),
+                    builder: (context, state) => const PracticeIntroScreen(skillId: 'writing'),
+                  ),
+                  GoRoute(
+                    path: ':skill/intro',
+                    parentNavigatorKey: rootNavigatorKey,
+                    builder: (context, state) => PracticeIntroScreen(
+                      skillId: state.pathParameters['skill'] ?? 'speaking',
+                    ),
+                  ),
+                  GoRoute(
+                    path: ':skill/session',
+                    parentNavigatorKey: rootNavigatorKey,
+                    builder: (context, state) => PracticeSessionScreen(
+                      skillId: state.pathParameters['skill'] ?? 'speaking',
+                    ),
+                  ),
+                  GoRoute(
+                    path: ':skill/result',
+                    parentNavigatorKey: rootNavigatorKey,
+                    builder: (context, state) => PracticeResultScreen(
+                      skillId: state.pathParameters['skill'] ?? 'speaking',
+                    ),
                   ),
                 ],
               ),

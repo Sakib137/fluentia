@@ -13,8 +13,13 @@ class PracticeCard extends StatelessWidget {
     this.icon = Icons.psychology_rounded,
     this.durationMinutes,
     this.badge,
+    this.metadata,
+    this.progress,
+    this.statusText,
+    this.actionLabel = 'Start Practice',
     this.onStart,
     this.isLocked = false,
+    this.isEnabled = true,
   });
 
   final String title;
@@ -22,15 +27,21 @@ class PracticeCard extends StatelessWidget {
   final IconData icon;
   final int? durationMinutes;
   final String? badge;
+  final String? metadata;
+  final double? progress;
+  final String? statusText;
+  final String actionLabel;
   final VoidCallback? onStart;
   final bool isLocked;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
+    final effectiveDisabled = isLocked || !isEnabled;
 
     return AppCard(
-      onTap: isLocked ? null : onStart,
+      onTap: effectiveDisabled ? null : onStart,
       padding: AppSpacing.cardPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +62,7 @@ class PracticeCard extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: AppIconSizes.lg,
-                  color: isLocked
+                  color: effectiveDisabled
                       ? (isDark ? AppColors.slate500 : AppColors.slate400)
                       : (isDark ? AppColors.primary300 : AppColors.primary700),
                 ),
@@ -133,46 +144,71 @@ class PracticeCard extends StatelessWidget {
             style: TextStyle(
               fontSize: AppFontSizes.titleLarge,
               fontWeight: AppFontWeights.semiBold,
-              color: isLocked
+              color: effectiveDisabled
                   ? (isDark ? AppColors.slate500 : AppColors.slate400)
                   : (isDark
                         ? AppColors.darkTextPrimary
                         : AppColors.lightTextPrimary),
             ),
           ),
+          if (metadata != null) ...[
+            const SizedBox(height: AppSpacing.xxs),
+            Text(
+              metadata!,
+              style: TextStyle(
+                fontSize: AppFontSizes.caption,
+                fontWeight: AppFontWeights.medium,
+                color: isDark ? AppColors.primary300 : AppColors.primary700,
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.xs),
           Text(
             description,
             style: TextStyle(
               fontSize: AppFontSizes.bodySmall,
               height: 1.45,
-              color: isLocked
+              color: effectiveDisabled
                   ? (isDark ? AppColors.slate600 : AppColors.slate400)
                   : (isDark
                         ? AppColors.darkTextMuted
                         : AppColors.lightTextSecondary),
             ),
           ),
+          if (progress != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            ClipRRect(
+              borderRadius: AppRadii.roundedFull,
+              child: LinearProgressIndicator(
+                value: progress!.clamp(0.0, 1.0),
+                minHeight: 6,
+                backgroundColor: isDark ? AppColors.slate800 : AppColors.slate200,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  isDark ? AppColors.primary400 : AppColors.primary600,
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.md),
           Row(
             children: [
               Text(
-                isLocked ? 'Locked' : 'Start Practice',
+                effectiveDisabled ? 'Locked' : actionLabel,
                 style: TextStyle(
                   fontSize: AppFontSizes.labelMedium,
                   fontWeight: AppFontWeights.semiBold,
-                  color: isLocked
+                  color: effectiveDisabled
                       ? (isDark ? AppColors.slate500 : AppColors.slate400)
                       : (isDark ? AppColors.primary400 : AppColors.primary600),
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
               Icon(
-                isLocked
+                effectiveDisabled
                     ? Icons.lock_outline_rounded
                     : Icons.arrow_forward_rounded,
                 size: AppIconSizes.sm,
-                color: isLocked
+                color: effectiveDisabled
                     ? (isDark ? AppColors.slate500 : AppColors.slate400)
                     : (isDark ? AppColors.primary400 : AppColors.primary600),
               ),
