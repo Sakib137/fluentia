@@ -7,18 +7,24 @@ import 'package:fluentia/app/router/app_routes.dart';
 import 'package:fluentia/core/constants/app_constants.dart';
 import 'package:fluentia/core/constants/app_strings.dart';
 import 'package:fluentia/core/constants/storage_keys.dart';
+import 'package:fluentia/core/database/database_provider.dart';
 import 'package:fluentia/core/services/preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../helpers/fake_database_service.dart';
 
 void main() {
   group('GoRouter and Shell Navigation Tests', () {
     late SharedPreferences sharedPreferences;
+    late FakeDatabaseService fakeDb;
 
     setUp(() async {
       SharedPreferences.setMockInitialValues({
         StorageKeys.hasCompletedOnboarding: true,
       });
       sharedPreferences = await SharedPreferences.getInstance();
+      fakeDb = FakeDatabaseService();
+      await fakeDb.initialize();
     });
 
     Future<void> pumpApp(
@@ -41,6 +47,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+          databaseServiceProvider.overrideWithValue(fakeDb),
         ],
       );
       addTearDown(container.dispose);
@@ -141,6 +148,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+          databaseServiceProvider.overrideWithValue(fakeDb),
         ],
       );
       addTearDown(container.dispose);
@@ -183,6 +191,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+          databaseServiceProvider.overrideWithValue(fakeDb),
         ],
       );
       addTearDown(container.dispose);
@@ -217,6 +226,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+          databaseServiceProvider.overrideWithValue(fakeDb),
         ],
       );
       addTearDown(container.dispose);

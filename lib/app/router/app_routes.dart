@@ -22,6 +22,7 @@ class AppRoutes {
 
   // Nested Learn Routes
   static const String learnVocabulary = '/learn/vocabulary';
+  static const String learnVocabularyWord = '/learn/vocabulary/word/:id';
   static const String learnGrammar = '/learn/grammar';
 
   // Nested Progress Routes

@@ -19,6 +19,7 @@ import '../../features/progress/presentation/statistics_screen.dart';
 import '../../features/reading/presentation/reading_screen.dart';
 import '../../features/speaking/presentation/speaking_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
+import '../../features/vocabulary/presentation/screens/word_detail_screen.dart';
 import '../../features/vocabulary/presentation/vocabulary_screen.dart';
 import '../../features/writing/presentation/writing_screen.dart';
 import 'app_routes.dart';
@@ -117,6 +118,15 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'vocabulary',
                     parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const VocabularyScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'word/:id',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) => WordDetailScreen(
+                          wordId: state.pathParameters['id'] ?? '',
+                        ),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'grammar',
