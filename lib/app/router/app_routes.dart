@@ -5,6 +5,7 @@ class AppRoutes {
   // Root & Standalone Routes
   static const String splash = '/splash';
   static const String onboarding = '/onboarding';
+  static const String placementTest = '/onboarding/placement-test';
 
   // Shell Tabs
   static const String home = '/home';

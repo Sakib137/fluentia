@@ -93,6 +93,7 @@ class SecondaryButton extends StatelessWidget {
 
     final buttonStyle = OutlinedButton.styleFrom(
       elevation: 0,
+      minimumSize: Size(0, height),
       backgroundColor: isOutlined
           ? Colors.transparent
           : (isDark ? AppColors.slate800 : AppColors.slate100),

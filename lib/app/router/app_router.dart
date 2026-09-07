@@ -8,6 +8,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/learn/presentation/learn_screen.dart';
 import '../../features/listening/presentation/listening_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/onboarding/presentation/screens/placement_test_screen.dart';
 import '../../features/practice/presentation/practice_screen.dart';
 import '../../features/profile/presentation/notifications_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
@@ -45,6 +46,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.onboarding,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.placementTest,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const PlacementTestScreen(),
       ),
       GoRoute(
         path: AppRoutes.challenge,

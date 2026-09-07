@@ -7,11 +7,12 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_strings.dart';
-import '../../../core/constants/storage_keys.dart';
-import '../../../core/services/preferences_service.dart';
+import '../../../core/notifications/notification_provider.dart';
+import '../../../core/utils/app_logger.dart';
 import '../../../shared/extensions/context_extensions.dart';
+import '../../onboarding/data/repositories/onboarding_repository.dart';
 
-/// Splash screen that bootstraps app state and routes to Onboarding or Home.
+/// Splash screen that bootstraps app state, initializes local services, and routes cleanly.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -26,19 +27,38 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     _handleNavigation();
   }
 
-  Future<void> _handleNavigation() async {
-    await Future.delayed(const Duration(milliseconds: 1200));
-    if (!mounted) return;
+  void _handleNavigation() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
 
-    final prefs = ref.read(preferencesServiceProvider);
-    final hasCompletedOnboarding =
-        prefs.getBool(StorageKeys.hasCompletedOnboarding) ?? false;
+      try {
+        // Initialize required local services
+        final notificationService = ref.read(notificationServiceProvider);
+        await notificationService.initialize();
 
-    if (hasCompletedOnboarding) {
-      context.go(AppRoutes.home);
-    } else {
-      context.go(AppRoutes.onboarding);
-    }
+        // Check onboarding completion status
+        final repo = ref.read(onboardingRepositoryProvider);
+        final hasCompletedOnboarding = await repo.hasCompletedOnboarding();
+
+        if (!mounted) return;
+
+        if (hasCompletedOnboarding) {
+          context.go(AppRoutes.home);
+        } else {
+          context.go(AppRoutes.onboarding);
+        }
+      } catch (e, st) {
+        AppLogger.error(
+          'Error during splash initialization',
+          error: e,
+          stackTrace: st,
+          tag: 'SplashScreen',
+        );
+        if (mounted) {
+          context.go(AppRoutes.onboarding);
+        }
+      }
+    });
   }
 
   @override
@@ -63,8 +83,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               ),
               child: Icon(
                 Icons.auto_stories_rounded,
-                size: 36,
-                color: isDark ? AppColors.primary300 : AppColors.primary600,
+                size: 38,
+                color: isDark ? AppColors.primary400 : AppColors.primary600,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -73,7 +93,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                letterSpacing: -0.6,
+                letterSpacing: -0.5,
                 color: isDark ? AppColors.slate50 : AppColors.slate900,
               ),
             ),
@@ -83,7 +103,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.slate400 : AppColors.slate500,
+                color: isDark ? AppColors.slate400 : AppColors.slate600,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  isDark ? AppColors.primary400 : AppColors.primary600,
+                ),
               ),
             ),
           ],

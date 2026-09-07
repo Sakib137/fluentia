@@ -92,6 +92,7 @@ class PrimaryButton extends StatelessWidget {
 
     final buttonStyle = ElevatedButton.styleFrom(
       elevation: 0,
+      minimumSize: Size(0, height),
       backgroundColor: isDark ? AppColors.primary400 : AppColors.primary600,
       disabledBackgroundColor: isDark ? AppColors.slate800 : AppColors.slate200,
       shape: const RoundedRectangleBorder(borderRadius: AppRadii.button),

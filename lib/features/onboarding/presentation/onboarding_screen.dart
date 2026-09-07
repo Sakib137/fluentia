@@ -3,138 +3,177 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router/app_routes.dart';
-import '../../../app/theme/app_colors.dart';
-import '../../../app/theme/app_spacing.dart';
-import '../../../core/constants/app_strings.dart';
-import '../../../core/constants/storage_keys.dart';
-import '../../../core/services/preferences_service.dart';
+import '../../../app/theme/design_system.dart';
 import '../../../shared/extensions/context_extensions.dart';
-import '../../../shared/widgets/fluent_button.dart';
-import '../../../shared/widgets/fluent_card.dart';
+import '../data/models/onboarding_state_model.dart';
+import 'providers/onboarding_provider.dart';
+import 'widgets/daily_goal_step.dart';
+import 'widgets/goals_step.dart';
+import 'widgets/level_step.dart';
+import 'widgets/personalized_plan_step.dart';
+import 'widgets/placement_prompt_step.dart';
+import 'widgets/reminder_step.dart';
+import 'widgets/welcome_step.dart';
 
-/// Onboarding screen introducing Fluentia's principles and transitioning to Home.
-class OnboardingScreen extends ConsumerWidget {
+/// Central host screen managing the multi-step first-time onboarding flow.
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
-  Future<void> _completeOnboarding(BuildContext context, WidgetRef ref) async {
-    final prefs = ref.read(preferencesServiceProvider);
-    await prefs.setBool(StorageKeys.hasCompletedOnboarding, true);
-    if (context.mounted) {
+  @override
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
+  int _currentPage = 0;
+  static const int _totalSteps = 7;
+
+  void _goToPage(int page) {
+    if (page >= 0 && page < _totalSteps) {
+      setState(() => _currentPage = page);
+    }
+  }
+
+  void _nextPage() {
+    _goToPage(_currentPage + 1);
+  }
+
+  void _previousPage() {
+    _goToPage(_currentPage - 1);
+  }
+
+  Future<void> _finishOnboarding() async {
+    final notifier = ref.read(onboardingNotifierProvider.notifier);
+    await notifier.completeOnboarding();
+    if (mounted) {
       context.go(AppRoutes.home);
     }
   }
 
+  Future<void> _openPlacementTest() async {
+    await context.push(AppRoutes.placementTest);
+    // If the placement test was completed while away, advance to Personalized Plan step
+    final state = ref.read(onboardingNotifierProvider);
+    if (state.placementTestCompleted && mounted) {
+      _goToPage(6); // Go to PersonalizedPlanStep
+    }
+  }
+
+  Widget _buildStep(
+    int step,
+    OnboardingStateModel state,
+    OnboardingNotifier notifier,
+  ) {
+    switch (step) {
+      case 0:
+        return WelcomeStep(
+          onGetStarted: _nextPage,
+        );
+      case 1:
+        return GoalsStep(
+          selectedGoals: state.selectedGoals,
+          onGoalToggled: notifier.toggleGoal,
+          onBack: _previousPage,
+          onContinue: _nextPage,
+        );
+      case 2:
+        return LevelStep(
+          selectedLevel: state.currentLevel,
+          onLevelSelected: notifier.setLevel,
+          onBack: _previousPage,
+          onContinue: _nextPage,
+        );
+      case 3:
+        return DailyGoalStep(
+          selectedMinutes: state.dailyPracticeMinutes,
+          onMinutesSelected: notifier.setDailyMinutes,
+          onBack: _previousPage,
+          onContinue: _nextPage,
+        );
+      case 4:
+        return ReminderStep(
+          remindersEnabled: state.remindersEnabled,
+          reminderCount: state.reminderCount,
+          reminderTimes: state.reminderTimes,
+          onRemindersEnabledChanged: notifier.setRemindersEnabled,
+          onReminderCountChanged: notifier.setReminderCount,
+          onTimeUpdated: notifier.updateReminderTime,
+          onAddCustomSlot: notifier.addCustomReminderSlot,
+          onRemoveSlot: notifier.removeReminderSlot,
+          onBack: _previousPage,
+          onContinue: _nextPage,
+        );
+      case 5:
+        return PlacementPromptStep(
+          onTakeTest: _openPlacementTest,
+          onSkipTest: () {
+            notifier.generateAndSetPlan();
+            _goToPage(6);
+          },
+          onBack: _previousPage,
+        );
+      case 6:
+      default:
+        return PersonalizedPlanStep(
+          dailyMinutes: state.dailyPracticeMinutes,
+          plan: state.personalizedPlan.isNotEmpty
+              ? state.personalizedPlan
+              : {'Speaking': 4, 'Listening': 3, 'Vocabulary': 3, 'Grammar': 2, 'Reading': 3},
+          selectedGoals: state.selectedGoals,
+          estimatedLevel: state.estimatedLevel ?? state.currentLevel,
+          onBack: _previousPage,
+          onComplete: _finishOnboarding,
+        );
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final state = ref.watch(onboardingNotifierProvider);
+    final notifier = ref.read(onboardingNotifierProvider.notifier);
     final isDark = context.isDarkMode;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: FluentButton(
-                  text: AppStrings.skip,
-                  variant: FluentButtonVariant.text,
-                  onPressed: () => _completeOnboarding(context, ref),
+    return PopScope(
+      canPop: _currentPage == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && _currentPage > 0) {
+          _previousPage();
+        }
+      },
+      child: Scaffold(
+        appBar: _currentPage > 0
+            ? AppBar(
+                backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                elevation: 0,
+                scrolledUnderElevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  onPressed: _previousPage,
+                  tooltip: 'Back',
                 ),
-              ),
-              const Spacer(),
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.slate800 : AppColors.primary50,
-                  borderRadius: AppSpacing.roundedLg,
-                  border: Border.all(
-                    color: isDark ? AppColors.slate700 : AppColors.primary200,
-                    width: 1,
+                title: Text(
+                  'Step $_currentPage of ${_totalSteps - 1}',
+                  style: TextStyle(
+                    fontSize: AppFontSizes.labelMedium,
+                    fontWeight: AppFontWeights.medium,
+                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
                   ),
                 ),
-                child: Icon(
-                  Icons.psychology_rounded,
-                  size: 30,
-                  color: isDark ? AppColors.primary400 : AppColors.primary600,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                AppStrings.onboardingTitle,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.5,
-                  height: 1.25,
-                  color: isDark ? AppColors.slate50 : AppColors.slate900,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                AppStrings.onboardingSubtitle,
-                style: TextStyle(
-                  fontSize: 15,
-                  height: 1.55,
-                  color: isDark ? AppColors.slate400 : AppColors.slate600,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              FluentCard(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.offline_pin_rounded,
-                      color: isDark ? AppColors.sage500 : AppColors.sage600,
-                      size: 24,
+                centerTitle: true,
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(3),
+                  child: LinearProgressIndicator(
+                    value: _currentPage / (_totalSteps - 1),
+                    backgroundColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      isDark ? AppColors.primary400 : AppColors.primary600,
                     ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppStrings.offlineModeBadge,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: isDark
-                                  ? AppColors.slate100
-                                  : AppColors.slate900,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            AppStrings.offlineModeDesc,
-                            style: TextStyle(
-                              fontSize: 12,
-                              height: 1.4,
-                              color: isDark
-                                  ? AppColors.slate400
-                                  : AppColors.slate500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    minHeight: 3,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              FluentButton(
-                text: AppStrings.getStarted,
-                expand: true,
-                onPressed: () => _completeOnboarding(context, ref),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-            ],
-          ),
-        ),
+              )
+            : null,
+        body: _buildStep(_currentPage, state, notifier),
       ),
     );
   }
