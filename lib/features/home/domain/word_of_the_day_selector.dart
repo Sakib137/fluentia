@@ -18,8 +18,10 @@ class WordOfTheDaySelector {
         word: 'fluent',
         phonetic: '/ˈfluː.ənt/',
         partOfSpeech: 'adjective',
-        definition: 'Able to speak or write a particular foreign language easily and accurately.',
-        example: 'With continuous daily practice, you will become fluent in English.',
+        definition:
+            'Able to speak or write a particular foreign language easily and accurately.',
+        example:
+            'With continuous daily practice, you will become fluent in English.',
         cefrLevel: 'B2',
         isSaved: isSaved,
       );
@@ -27,9 +29,11 @@ class WordOfTheDaySelector {
 
     // Calculate day-of-year
     final startOfYear = DateTime.utc(date.year, 1, 1);
-    final dayOfYear = DateTime.utc(date.year, date.month, date.day)
-        .difference(startOfYear)
-        .inDays;
+    final dayOfYear = DateTime.utc(
+      date.year,
+      date.month,
+      date.day,
+    ).difference(startOfYear).inDays;
 
     final index = (dayOfYear + date.year) % kCuratedVocabularyList.length;
     final template = kCuratedVocabularyList[index];

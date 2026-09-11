@@ -3,23 +3,29 @@ import 'package:fluentia/features/onboarding/domain/scoring/plan_generator.dart'
 
 void main() {
   group('PlanGenerator Tests', () {
-    test('Plan allocations sum exactly to daily target for all standard intervals', () {
-      final targetTimes = [5, 10, 15, 20, 30];
+    test(
+      'Plan allocations sum exactly to daily target for all standard intervals',
+      () {
+        final targetTimes = [5, 10, 15, 20, 30];
 
-      for (final minutes in targetTimes) {
-        final plan = PlanGenerator.generatePlan(
-          dailyMinutes: minutes,
-          selectedGoals: ['Speaking', 'Vocabulary'],
-        );
+        for (final minutes in targetTimes) {
+          final plan = PlanGenerator.generatePlan(
+            dailyMinutes: minutes,
+            selectedGoals: ['Speaking', 'Vocabulary'],
+          );
 
-        final totalAllocated = plan.values.fold<int>(0, (sum, val) => sum + val);
-        expect(
-          totalAllocated,
-          equals(minutes),
-          reason: 'Total allocated minutes must strictly equal $minutes',
-        );
-      }
-    });
+          final totalAllocated = plan.values.fold<int>(
+            0,
+            (sum, val) => sum + val,
+          );
+          expect(
+            totalAllocated,
+            equals(minutes),
+            reason: 'Total allocated minutes must strictly equal $minutes',
+          );
+        }
+      },
+    );
 
     test('Selected goal receives higher priority and weighting in plan', () {
       final speakingPlan = PlanGenerator.generatePlan(

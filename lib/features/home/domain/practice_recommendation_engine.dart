@@ -9,7 +9,8 @@ class PracticeRecommendationEngine {
     QuickPracticeItem(
       skillType: 'Speaking',
       title: 'Conversational Fluency',
-      description: 'Practice pronunciation, sentence stress, and speaking confidence.',
+      description:
+          'Practice pronunciation, sentence stress, and speaking confidence.',
       estimatedMinutes: 5,
       route: '/practice/speaking',
       isPrimaryGoal: false,
@@ -17,7 +18,8 @@ class PracticeRecommendationEngine {
     QuickPracticeItem(
       skillType: 'Listening',
       title: 'Comprehension & Accents',
-      description: 'Train your ear with real-world dialogues and native intonations.',
+      description:
+          'Train your ear with real-world dialogues and native intonations.',
       estimatedMinutes: 5,
       route: '/practice/listening',
       isPrimaryGoal: false,
@@ -43,7 +45,9 @@ class PracticeRecommendationEngine {
   /// Prioritizes the base practice items according to [selectedGoals].
   ///
   /// Matching skills receive higher rank and `isPrimaryGoal = true`.
-  static List<QuickPracticeItem> rankRecommendations(List<String> selectedGoals) {
+  static List<QuickPracticeItem> rankRecommendations(
+    List<String> selectedGoals,
+  ) {
     if (selectedGoals.isEmpty) {
       // Default balanced order
       return _basePracticeItems;

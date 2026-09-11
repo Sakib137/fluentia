@@ -101,7 +101,9 @@ class _MockNotificationService implements NotificationService {
     required String body,
     int notificationId = 1001,
   }) async {
-    scheduledReminders.add('$notificationId: ${timeOfDay.hour}:${timeOfDay.minute}');
+    scheduledReminders.add(
+      '$notificationId: ${timeOfDay.hour}:${timeOfDay.minute}',
+    );
   }
 
   @override
@@ -147,7 +149,9 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-          notificationServiceProvider.overrideWithValue(mockNotificationService),
+          notificationServiceProvider.overrideWithValue(
+            mockNotificationService,
+          ),
           databaseServiceProvider.overrideWithValue(mockDatabaseService),
         ],
       );
@@ -157,7 +161,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Starts at Splash, which initializes services and immediately routes to Onboarding
-      expect(find.text('Practice English.\nBuild confidence.\nEvery day.'), findsOneWidget);
+      expect(
+        find.text('Practice English.\nBuild confidence.\nEvery day.'),
+        findsOneWidget,
+      );
       expect(find.text(AppStrings.getStarted), findsOneWidget);
 
       // Step 0 -> Step 1: Tap "Get Started"
@@ -167,7 +174,10 @@ void main() {
       // Step 1: Goals Step
       expect(find.text('What would you like to improve?'), findsOneWidget);
       // Try tapping Continue before selecting any goal (disabled)
-      final continueButton = find.widgetWithText(ElevatedButton, AppStrings.continueText);
+      final continueButton = find.widgetWithText(
+        ElevatedButton,
+        AppStrings.continueText,
+      );
       final continueWidget = tester.widget<ElevatedButton>(continueButton);
       expect(continueWidget.onPressed, isNull);
 
@@ -190,7 +200,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Step 3: Daily Practice Duration Step
-      expect(find.text('How much time can you practice each day?'), findsOneWidget);
+      expect(
+        find.text('How much time can you practice each day?'),
+        findsOneWidget,
+      );
       // Select 15 Minutes
       await tester.tap(find.text('15 Minutes'));
       await tester.pumpAndSettle();
@@ -233,60 +246,63 @@ void main() {
       expect(state.onboardingCompleted, isTrue);
     });
 
-    testWidgets('Taking placement test benchmarks estimated level and updates plan', (
-      WidgetTester tester,
-    ) async {
-      final container = ProviderContainer(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-          notificationServiceProvider.overrideWithValue(mockNotificationService),
-          databaseServiceProvider.overrideWithValue(mockDatabaseService),
-        ],
-      );
-      addTearDown(container.dispose);
+    testWidgets(
+      'Taking placement test benchmarks estimated level and updates plan',
+      (WidgetTester tester) async {
+        final container = ProviderContainer(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+            notificationServiceProvider.overrideWithValue(
+              mockNotificationService,
+            ),
+            databaseServiceProvider.overrideWithValue(mockDatabaseService),
+          ],
+        );
+        addTearDown(container.dispose);
 
-      await tester.pumpWidget(createTestWidget(container));
-      await tester.pumpAndSettle();
-
-      final router = container.read(routerProvider);
-      // Navigate directly to placement test route
-      router.go(AppRoutes.placementTest);
-      await tester.pumpAndSettle();
-
-      expect(find.text('English Placement Test'), findsOneWidget);
-      expect(find.text('Question 1 of 12'), findsOneWidget);
-
-      // Answer all 12 questions correctly
-      for (int i = 0; i < 12; i++) {
-        final q = kBundledPlacementQuestions[i];
-        final correctOptionText = q.options[q.correctAnswerIndex];
-
-        await tester.tap(find.text(correctOptionText));
+        await tester.pumpWidget(createTestWidget(container));
         await tester.pumpAndSettle();
 
-        if (i < 11) {
-          await tester.tap(find.text('Next Question'));
+        final router = container.read(routerProvider);
+        // Navigate directly to placement test route
+        router.go(AppRoutes.placementTest);
+        await tester.pumpAndSettle();
+
+        expect(find.text('English Placement Test'), findsOneWidget);
+        expect(find.text('Question 1 of 12'), findsOneWidget);
+
+        // Answer all 12 questions correctly
+        for (int i = 0; i < 12; i++) {
+          final q = kBundledPlacementQuestions[i];
+          final correctOptionText = q.options[q.correctAnswerIndex];
+
+          await tester.tap(find.text(correctOptionText));
           await tester.pumpAndSettle();
-        } else {
-          await tester.tap(find.text('Submit Test'));
-          await tester.pumpAndSettle();
+
+          if (i < 11) {
+            await tester.tap(find.text('Next Question'));
+            await tester.pumpAndSettle();
+          } else {
+            await tester.tap(find.text('Submit Test'));
+            await tester.pumpAndSettle();
+          }
         }
-      }
 
-      // Assessment Complete view
-      expect(find.text('Assessment Complete'), findsOneWidget);
-      expect(find.text('CEFR B2'), findsOneWidget);
-      expect(find.text('Upper Intermediate'), findsOneWidget);
+        // Assessment Complete view
+        expect(find.text('Assessment Complete'), findsOneWidget);
+        expect(find.text('CEFR B2'), findsOneWidget);
+        expect(find.text('Upper Intermediate'), findsOneWidget);
 
-      // Continue to Plan
-      await tester.tap(find.text('Continue to Plan'));
-      await tester.pumpAndSettle();
+        // Continue to Plan
+        await tester.tap(find.text('Continue to Plan'));
+        await tester.pumpAndSettle();
 
-      final onboardingState = container.read(onboardingNotifierProvider);
-      expect(onboardingState.placementTestCompleted, isTrue);
-      expect(onboardingState.estimatedLevel, equals('B2'));
-      expect(onboardingState.placementTestScore, equals(12));
-    });
+        final onboardingState = container.read(onboardingNotifierProvider);
+        expect(onboardingState.placementTestCompleted, isTrue);
+        expect(onboardingState.estimatedLevel, equals('B2'));
+        expect(onboardingState.placementTestScore, equals(12));
+      },
+    );
 
     testWidgets('Exiting placement test shows confirmation dialog', (
       WidgetTester tester,
@@ -294,7 +310,9 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-          notificationServiceProvider.overrideWithValue(mockNotificationService),
+          notificationServiceProvider.overrideWithValue(
+            mockNotificationService,
+          ),
           databaseServiceProvider.overrideWithValue(mockDatabaseService),
         ],
       );
@@ -329,30 +347,33 @@ void main() {
       expect(find.text('Question 1 of 12'), findsNothing);
     });
 
-    testWidgets('Second launch with completed onboarding routes directly to Home', (
-      WidgetTester tester,
-    ) async {
-      // Set onboarding as already completed in SharedPreferences
-      SharedPreferences.setMockInitialValues({
-        StorageKeys.hasCompletedOnboarding: true,
-      });
-      final prefs = await SharedPreferences.getInstance();
+    testWidgets(
+      'Second launch with completed onboarding routes directly to Home',
+      (WidgetTester tester) async {
+        // Set onboarding as already completed in SharedPreferences
+        SharedPreferences.setMockInitialValues({
+          StorageKeys.hasCompletedOnboarding: true,
+        });
+        final prefs = await SharedPreferences.getInstance();
 
-      final container = ProviderContainer(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(prefs),
-          notificationServiceProvider.overrideWithValue(mockNotificationService),
-          databaseServiceProvider.overrideWithValue(mockDatabaseService),
-        ],
-      );
-      addTearDown(container.dispose);
+        final container = ProviderContainer(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            notificationServiceProvider.overrideWithValue(
+              mockNotificationService,
+            ),
+            databaseServiceProvider.overrideWithValue(mockDatabaseService),
+          ],
+        );
+        addTearDown(container.dispose);
 
-      await tester.pumpWidget(createTestWidget(container));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(createTestWidget(container));
+        await tester.pumpAndSettle();
 
-      // Splash initializes and immediately goes to Home, skipping Onboarding
-      expect(find.text(AppStrings.dailyGoalTitle), findsOneWidget);
-      expect(find.text(AppStrings.getStarted), findsNothing);
-    });
+        // Splash initializes and immediately goes to Home, skipping Onboarding
+        expect(find.text(AppStrings.dailyGoalTitle), findsOneWidget);
+        expect(find.text(AppStrings.getStarted), findsNothing);
+      },
+    );
   });
 }

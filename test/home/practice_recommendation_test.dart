@@ -17,7 +17,9 @@ void main() {
     });
 
     test('Career & business goal prioritizes Speaking and Writing', () {
-      final items = PracticeRecommendationEngine.rankRecommendations(['career_business']);
+      final items = PracticeRecommendationEngine.rankRecommendations([
+        'career_business',
+      ]);
 
       expect(items.length, 4);
       final topSkills = items.sublist(0, 2).map((e) => e.skillType).toSet();
@@ -29,7 +31,9 @@ void main() {
     });
 
     test('Exams & tests goal prioritizes Reading and Writing', () {
-      final items = PracticeRecommendationEngine.rankRecommendations(['exams_tests']);
+      final items = PracticeRecommendationEngine.rankRecommendations([
+        'exams_tests',
+      ]);
 
       expect(items.length, 4);
       final topSkills = items.sublist(0, 2).map((e) => e.skillType).toSet();
@@ -41,7 +45,9 @@ void main() {
     });
 
     test('Casual conversation goal prioritizes Speaking and Listening', () {
-      final items = PracticeRecommendationEngine.rankRecommendations(['casual_conversation']);
+      final items = PracticeRecommendationEngine.rankRecommendations([
+        'casual_conversation',
+      ]);
 
       expect(items.length, 4);
       final topSkills = items.sublist(0, 2).map((e) => e.skillType).toSet();

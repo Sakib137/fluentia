@@ -27,37 +27,47 @@ void main() {
       }
     });
 
-    test('Correctly maps completed item IDs and calculates progress fraction', () {
-      final initialChallenge = DailyChallengeGenerator.generate(date: testDate);
-      final firstItemId = initialChallenge.items[0].id;
-      final secondItemId = initialChallenge.items[1].id;
+    test(
+      'Correctly maps completed item IDs and calculates progress fraction',
+      () {
+        final initialChallenge = DailyChallengeGenerator.generate(
+          date: testDate,
+        );
+        final firstItemId = initialChallenge.items[0].id;
+        final secondItemId = initialChallenge.items[1].id;
 
-      final updatedChallenge = DailyChallengeGenerator.generate(
-        date: testDate,
-        completedItemIds: {firstItemId, secondItemId},
-      );
+        final updatedChallenge = DailyChallengeGenerator.generate(
+          date: testDate,
+          completedItemIds: {firstItemId, secondItemId},
+        );
 
-      expect(updatedChallenge.completedCount, 2);
-      expect(updatedChallenge.totalCount, 5);
-      expect(updatedChallenge.progressFraction, 0.4);
-      expect(updatedChallenge.items[0].isCompleted, isTrue);
-      expect(updatedChallenge.items[1].isCompleted, isTrue);
-      expect(updatedChallenge.items[2].isCompleted, isFalse);
-      expect(updatedChallenge.isAllCompleted, isFalse);
-    });
+        expect(updatedChallenge.completedCount, 2);
+        expect(updatedChallenge.totalCount, 5);
+        expect(updatedChallenge.progressFraction, 0.4);
+        expect(updatedChallenge.items[0].isCompleted, isTrue);
+        expect(updatedChallenge.items[1].isCompleted, isTrue);
+        expect(updatedChallenge.items[2].isCompleted, isFalse);
+        expect(updatedChallenge.isAllCompleted, isFalse);
+      },
+    );
 
-    test('Full completion reports isAllCompleted = true and 1.0 progress fraction', () {
-      final initialChallenge = DailyChallengeGenerator.generate(date: testDate);
-      final allIds = initialChallenge.items.map((e) => e.id).toSet();
+    test(
+      'Full completion reports isAllCompleted = true and 1.0 progress fraction',
+      () {
+        final initialChallenge = DailyChallengeGenerator.generate(
+          date: testDate,
+        );
+        final allIds = initialChallenge.items.map((e) => e.id).toSet();
 
-      final fullChallenge = DailyChallengeGenerator.generate(
-        date: testDate,
-        completedItemIds: allIds,
-      );
+        final fullChallenge = DailyChallengeGenerator.generate(
+          date: testDate,
+          completedItemIds: allIds,
+        );
 
-      expect(fullChallenge.completedCount, 5);
-      expect(fullChallenge.isAllCompleted, isTrue);
-      expect(fullChallenge.progressFraction, 1.0);
-    });
+        expect(fullChallenge.completedCount, 5);
+        expect(fullChallenge.isAllCompleted, isTrue);
+        expect(fullChallenge.progressFraction, 1.0);
+      },
+    );
   });
 }

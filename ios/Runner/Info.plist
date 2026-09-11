@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Fluentia uses your microphone to recognize your speech during speaking practice.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Fluentia uses speech recognition to provide feedback on your spoken English.</string>
 </dict>
 </plist>

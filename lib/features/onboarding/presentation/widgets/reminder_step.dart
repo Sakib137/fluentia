@@ -33,7 +33,11 @@ class ReminderStep extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onContinue;
 
-  Future<void> _pickTime(BuildContext context, int index, ReminderTimeSlot slot) async {
+  Future<void> _pickTime(
+    BuildContext context,
+    int index,
+    ReminderTimeSlot slot,
+  ) async {
     final picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: slot.hour, minute: slot.minute),
@@ -75,7 +79,8 @@ class ReminderStep extends StatelessWidget {
                 children: [
                   const SectionHeader(
                     title: 'Would you like practice reminders?',
-                    subtitle: 'Stay on track with gentle, local notifications on your device',
+                    subtitle:
+                        'Stay on track with gentle, local notifications on your device',
                   ),
                   const SizedBox(height: AppSpacing.md),
                   // Toggle Enable / Disable Card
@@ -88,8 +93,14 @@ class ReminderStep extends StatelessWidget {
                           height: 44,
                           decoration: BoxDecoration(
                             color: remindersEnabled
-                                ? (isDark ? AppColors.primary900.withValues(alpha: 0.4) : AppColors.primary50)
-                                : (isDark ? AppColors.slate800 : AppColors.slate100),
+                                ? (isDark
+                                      ? AppColors.primary900.withValues(
+                                          alpha: 0.4,
+                                        )
+                                      : AppColors.primary50)
+                                : (isDark
+                                      ? AppColors.slate800
+                                      : AppColors.slate100),
                             borderRadius: AppRadii.roundedMd,
                           ),
                           child: Icon(
@@ -97,8 +108,12 @@ class ReminderStep extends StatelessWidget {
                                 ? Icons.notifications_active_rounded
                                 : Icons.notifications_off_outlined,
                             color: remindersEnabled
-                                ? (isDark ? AppColors.primary400 : AppColors.primary600)
-                                : (isDark ? AppColors.slate500 : AppColors.slate400),
+                                ? (isDark
+                                      ? AppColors.primary400
+                                      : AppColors.primary600)
+                                : (isDark
+                                      ? AppColors.slate500
+                                      : AppColors.slate400),
                             size: AppIconSizes.md,
                           ),
                         ),
@@ -112,7 +127,9 @@ class ReminderStep extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: AppFontSizes.bodyLarge,
                                   fontWeight: AppFontWeights.semiBold,
-                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
                                 ),
                               ),
                               Text(
@@ -121,7 +138,9 @@ class ReminderStep extends StatelessWidget {
                                     : 'Reminders disabled — study at your own pace',
                                 style: TextStyle(
                                   fontSize: AppFontSizes.bodySmall,
-                                  color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                                  color: isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextSecondary,
                                 ),
                               ),
                             ],
@@ -130,7 +149,9 @@ class ReminderStep extends StatelessWidget {
                         Switch.adaptive(
                           value: remindersEnabled,
                           onChanged: onRemindersEnabledChanged,
-                          activeTrackColor: isDark ? AppColors.primary400 : AppColors.primary600,
+                          activeTrackColor: isDark
+                              ? AppColors.primary400
+                              : AppColors.primary600,
                         ),
                       ],
                     ),
@@ -142,7 +163,9 @@ class ReminderStep extends StatelessWidget {
                       style: TextStyle(
                         fontSize: AppFontSizes.titleSmall,
                         fontWeight: AppFontWeights.semiBold,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -167,13 +190,23 @@ class ReminderStep extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? (isDark ? AppColors.primary900.withValues(alpha: 0.3) : AppColors.primary50)
-                                        : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                                        ? (isDark
+                                              ? AppColors.primary900.withValues(
+                                                  alpha: 0.3,
+                                                )
+                                              : AppColors.primary50)
+                                        : (isDark
+                                              ? AppColors.darkSurface
+                                              : AppColors.lightSurface),
                                     borderRadius: AppRadii.roundedMd,
                                     border: Border.all(
                                       color: isSelected
-                                          ? (isDark ? AppColors.primary500 : AppColors.primary600)
-                                          : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                          ? (isDark
+                                                ? AppColors.primary500
+                                                : AppColors.primary600)
+                                          : (isDark
+                                                ? AppColors.darkBorder
+                                                : AppColors.lightBorder),
                                       width: isSelected ? 1.8 : 1.0,
                                     ),
                                   ),
@@ -184,8 +217,12 @@ class ReminderStep extends StatelessWidget {
                                       fontSize: AppFontSizes.labelMedium,
                                       fontWeight: AppFontWeights.semiBold,
                                       color: isSelected
-                                          ? (isDark ? AppColors.primary300 : AppColors.primary700)
-                                          : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                                          ? (isDark
+                                                ? AppColors.primary300
+                                                : AppColors.primary700)
+                                          : (isDark
+                                                ? AppColors.darkTextSecondary
+                                                : AppColors.lightTextSecondary),
                                     ),
                                   ),
                                 ),
@@ -204,7 +241,9 @@ class ReminderStep extends StatelessWidget {
                           style: TextStyle(
                             fontSize: AppFontSizes.titleSmall,
                             fontWeight: AppFontWeights.semiBold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         if (reminderTimes.length < 5)
@@ -214,7 +253,9 @@ class ReminderStep extends StatelessWidget {
                             label: const Text('Add Time'),
                             style: TextButton.styleFrom(
                               visualDensity: VisualDensity.compact,
-                              foregroundColor: isDark ? AppColors.primary300 : AppColors.primary700,
+                              foregroundColor: isDark
+                                  ? AppColors.primary300
+                                  : AppColors.primary700,
                             ),
                           ),
                       ],
@@ -241,7 +282,9 @@ class ReminderStep extends StatelessWidget {
                                   Icon(
                                     Icons.access_time_rounded,
                                     size: AppIconSizes.sm + 2,
-                                    color: isDark ? AppColors.primary400 : AppColors.primary600,
+                                    color: isDark
+                                        ? AppColors.primary400
+                                        : AppColors.primary600,
                                   ),
                                   const SizedBox(width: AppSpacing.md),
                                   Expanded(
@@ -249,7 +292,9 @@ class ReminderStep extends StatelessWidget {
                                       'Reminder ${index + 1}',
                                       style: TextStyle(
                                         fontSize: AppFontSizes.bodyMedium,
-                                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                        color: isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextSecondary,
                                       ),
                                     ),
                                   ),
@@ -259,15 +304,22 @@ class ReminderStep extends StatelessWidget {
                                       vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: isDark ? AppColors.slate800 : AppColors.slate100,
+                                      color: isDark
+                                          ? AppColors.slate800
+                                          : AppColors.slate100,
                                       borderRadius: AppRadii.roundedSm,
                                     ),
                                     child: Text(
-                                      _formatTime(timeSlot.hour, timeSlot.minute),
+                                      _formatTime(
+                                        timeSlot.hour,
+                                        timeSlot.minute,
+                                      ),
                                       style: TextStyle(
                                         fontSize: AppFontSizes.labelLarge,
                                         fontWeight: AppFontWeights.bold,
-                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
                                       ),
                                     ),
                                   ),
@@ -277,7 +329,9 @@ class ReminderStep extends StatelessWidget {
                                       icon: Icon(
                                         Icons.close_rounded,
                                         size: 16,
-                                        color: isDark ? AppColors.slate500 : AppColors.slate400,
+                                        color: isDark
+                                            ? AppColors.slate500
+                                            : AppColors.slate400,
                                       ),
                                       onPressed: () => onRemoveSlot(index),
                                       tooltip: 'Remove slot',
@@ -311,14 +365,13 @@ class ReminderStep extends StatelessWidget {
             ),
             child: Row(
               children: [
-                SecondaryButton(
-                  label: AppStrings.back,
-                  onPressed: onBack,
-                ),
+                SecondaryButton(label: AppStrings.back, onPressed: onBack),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: PrimaryButton(
-                    label: remindersEnabled ? AppStrings.continueText : 'Maybe Later',
+                    label: remindersEnabled
+                        ? AppStrings.continueText
+                        : 'Maybe Later',
                     onPressed: onContinue,
                   ),
                 ),

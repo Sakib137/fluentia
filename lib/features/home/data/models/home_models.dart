@@ -39,7 +39,10 @@ class DailyProgressState {
     );
   }
 
-  factory DailyProgressState.initial({int targetMinutes = 15, bool isFirstDay = true}) {
+  factory DailyProgressState.initial({
+    int targetMinutes = 15,
+    bool isFirstDay = true,
+  }) {
     return DailyProgressState(
       targetMinutes: targetMinutes,
       practicedMinutes: 0,
@@ -113,10 +116,7 @@ class DailyChallengeItem {
 /// State of today's Daily Challenge.
 @immutable
 class DailyChallengeState {
-  const DailyChallengeState({
-    required this.dateKey,
-    required this.items,
-  });
+  const DailyChallengeState({required this.dateKey, required this.items});
 
   final String dateKey; // YYYY-MM-DD
   final List<DailyChallengeItem> items;
@@ -124,7 +124,8 @@ class DailyChallengeState {
   int get completedCount => items.where((i) => i.isCompleted).length;
   int get totalCount => items.length;
   bool get isAllCompleted => items.isNotEmpty && completedCount == totalCount;
-  double get progressFraction => totalCount > 0 ? (completedCount / totalCount) : 0.0;
+  double get progressFraction =>
+      totalCount > 0 ? (completedCount / totalCount) : 0.0;
 }
 
 /// Word of the Day entity.
@@ -212,7 +213,10 @@ class ProgressSnapshotData {
   final int completedSessionsCount;
   final int currentStreakDays;
 
-  factory ProgressSnapshotData.initial({String cefrLevel = 'B1', String levelTitle = 'Intermediate'}) {
+  factory ProgressSnapshotData.initial({
+    String cefrLevel = 'B1',
+    String levelTitle = 'Intermediate',
+  }) {
     return ProgressSnapshotData(
       cefrLevel: cefrLevel,
       levelTitle: levelTitle,

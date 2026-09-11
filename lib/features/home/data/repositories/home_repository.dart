@@ -16,10 +16,17 @@ import '../models/home_models.dart';
 /// Contract for Home feature data operations against local offline storage.
 abstract class HomeRepository {
   /// Fetches the daily progress metrics for [date] with given [targetMinutes].
-  Future<DailyProgressState> getDailyProgress(DateTime date, {int targetMinutes = 15});
+  Future<DailyProgressState> getDailyProgress(
+    DateTime date, {
+    int targetMinutes = 15,
+  });
 
   /// Logs newly completed practice minutes for [skillType] on [date].
-  Future<void> logPracticeMinutes(DateTime date, int additionalMinutes, String skillType);
+  Future<void> logPracticeMinutes(
+    DateTime date,
+    int additionalMinutes,
+    String skillType,
+  );
 
   /// Computes streak metrics up through [today].
   Future<StreakData> getStreakData(DateTime today, {int targetMinutes = 15});
@@ -28,7 +35,11 @@ abstract class HomeRepository {
   Future<DailyChallengeState> getDailyChallenge(DateTime date);
 
   /// Toggles completion status of a challenge item.
-  Future<void> toggleChallengeItem(DateTime date, String challengeId, bool isCompleted);
+  Future<void> toggleChallengeItem(
+    DateTime date,
+    String challengeId,
+    bool isCompleted,
+  );
 
   /// Loads the deterministic Word of the Day, reflecting local bookmark status.
   Future<WordOfTheDay> getWordOfTheDay(DateTime date);
@@ -63,7 +74,10 @@ class SqliteHomeRepository implements HomeRepository {
   }
 
   @override
-  Future<DailyProgressState> getDailyProgress(DateTime date, {int targetMinutes = 15}) async {
+  Future<DailyProgressState> getDailyProgress(
+    DateTime date, {
+    int targetMinutes = 15,
+  }) async {
     final dateKey = _formatDateKey(date);
 
     try {
@@ -79,19 +93,26 @@ class SqliteHomeRepository implements HomeRepository {
       final countResult = await _db.rawQuery(
         'SELECT COUNT(*) as count FROM ${UserProgressTable.tableName}',
       );
-      final totalRecordedDays = (countResult.firstOrNull?['count'] as int?) ?? 0;
+      final totalRecordedDays =
+          (countResult.firstOrNull?['count'] as int?) ?? 0;
 
       int practicedMinutes = 0;
       if (rows.isNotEmpty) {
-        practicedMinutes = (rows.first[UserProgressTable.columnMinutesPracticed] as int?) ?? 0;
+        practicedMinutes =
+            (rows.first[UserProgressTable.columnMinutesPracticed] as int?) ?? 0;
       }
 
-      final isFirstDay = totalRecordedDays == 0 ||
+      final isFirstDay =
+          totalRecordedDays == 0 ||
           (totalRecordedDays == 1 && rows.isNotEmpty && practicedMinutes == 0);
       final isCompleted = practicedMinutes >= targetMinutes;
-      final remainingMinutes = (targetMinutes - practicedMinutes).clamp(0, targetMinutes);
-      final progressFraction =
-          targetMinutes > 0 ? (practicedMinutes / targetMinutes).clamp(0.0, 1.0) : 0.0;
+      final remainingMinutes = (targetMinutes - practicedMinutes).clamp(
+        0,
+        targetMinutes,
+      );
+      final progressFraction = targetMinutes > 0
+          ? (practicedMinutes / targetMinutes).clamp(0.0, 1.0)
+          : 0.0;
 
       return DailyProgressState(
         targetMinutes: targetMinutes,
@@ -102,13 +123,21 @@ class SqliteHomeRepository implements HomeRepository {
         isFirstDay: isFirstDay,
       );
     } catch (e, st) {
-      AppLogger.error('Failed to get daily progress from database', error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to get daily progress from database',
+        error: e,
+        stackTrace: st,
+      );
       return DailyProgressState.initial(targetMinutes: targetMinutes);
     }
   }
 
   @override
-  Future<void> logPracticeMinutes(DateTime date, int additionalMinutes, String skillType) async {
+  Future<void> logPracticeMinutes(
+    DateTime date,
+    int additionalMinutes,
+    String skillType,
+  ) async {
     final dateKey = _formatDateKey(date);
     final nowIso = DateTime.now().toIso8601String();
 
@@ -134,28 +163,31 @@ class SqliteHomeRepository implements HomeRepository {
         };
 
         if (existingRows.isEmpty) {
-          await txn.insert(
-            UserProgressTable.tableName,
-            {
-              UserProgressTable.columnDate: dateKey,
-              UserProgressTable.columnMinutesPracticed: additionalMinutes,
-              UserProgressTable.columnLessonsCompleted: 1,
-              UserProgressTable.columnWordsLearned: 0,
-              skillColumn: additionalMinutes,
-              UserProgressTable.columnDailyGoalMet: 0,
-            },
-          );
+          await txn.insert(UserProgressTable.tableName, {
+            UserProgressTable.columnDate: dateKey,
+            UserProgressTable.columnMinutesPracticed: additionalMinutes,
+            UserProgressTable.columnLessonsCompleted: 1,
+            UserProgressTable.columnWordsLearned: 0,
+            skillColumn: additionalMinutes,
+            UserProgressTable.columnDailyGoalMet: 0,
+          });
         } else {
           final currentMinutes =
-              (existingRows.first[UserProgressTable.columnMinutesPracticed] as int?) ?? 0;
+              (existingRows.first[UserProgressTable.columnMinutesPracticed]
+                  as int?) ??
+              0;
           final currentLessons =
-              (existingRows.first[UserProgressTable.columnLessonsCompleted] as int?) ?? 0;
-          final currentSkillMinutes = (existingRows.first[skillColumn] as int?) ?? 0;
+              (existingRows.first[UserProgressTable.columnLessonsCompleted]
+                  as int?) ??
+              0;
+          final currentSkillMinutes =
+              (existingRows.first[skillColumn] as int?) ?? 0;
 
           await txn.update(
             UserProgressTable.tableName,
             {
-              UserProgressTable.columnMinutesPracticed: currentMinutes + additionalMinutes,
+              UserProgressTable.columnMinutesPracticed:
+                  currentMinutes + additionalMinutes,
               UserProgressTable.columnLessonsCompleted: currentLessons + 1,
               skillColumn: currentSkillMinutes + additionalMinutes,
             },
@@ -166,32 +198,41 @@ class SqliteHomeRepository implements HomeRepository {
 
         // 2. Insert practice session log
         final sessionId = 'session_${DateTime.now().microsecondsSinceEpoch}';
-        await txn.insert(
-          PracticeSessionsTable.tableName,
-          {
-            PracticeSessionsTable.columnId: sessionId,
-            PracticeSessionsTable.columnSkillType: skillType,
-            PracticeSessionsTable.columnLessonId: null,
-            PracticeSessionsTable.columnScore: 100.0,
-            PracticeSessionsTable.columnDurationSeconds: additionalMinutes * 60,
-            PracticeSessionsTable.columnMetadataJson: jsonEncode({'source': 'quick_practice'}),
-            PracticeSessionsTable.columnCompletedAt: nowIso,
-          },
-        );
+        await txn.insert(PracticeSessionsTable.tableName, {
+          PracticeSessionsTable.columnId: sessionId,
+          PracticeSessionsTable.columnSkillType: skillType,
+          PracticeSessionsTable.columnLessonId: null,
+          PracticeSessionsTable.columnScore: 100.0,
+          PracticeSessionsTable.columnDurationSeconds: additionalMinutes * 60,
+          PracticeSessionsTable.columnMetadataJson: jsonEncode({
+            'source': 'quick_practice',
+          }),
+          PracticeSessionsTable.columnCompletedAt: nowIso,
+        });
       });
     } catch (e, st) {
-      AppLogger.error('Failed to log practice minutes in database', error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to log practice minutes in database',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
   @override
-  Future<StreakData> getStreakData(DateTime today, {int targetMinutes = 15}) async {
+  Future<StreakData> getStreakData(
+    DateTime today, {
+    int targetMinutes = 15,
+  }) async {
     try {
       await _ensureInitialized();
 
       final rows = await _db.query(
         UserProgressTable.tableName,
-        columns: [UserProgressTable.columnDate, UserProgressTable.columnMinutesPracticed],
+        columns: [
+          UserProgressTable.columnDate,
+          UserProgressTable.columnMinutesPracticed,
+        ],
         where: '${UserProgressTable.columnMinutesPracticed} > 0',
         orderBy: '${UserProgressTable.columnDate} DESC',
       );
@@ -207,12 +248,13 @@ class SqliteHomeRepository implements HomeRepository {
         }
       }
 
-      return StreakCalculator.calculate(
-        activeDates: activeDates,
-        today: today,
-      );
+      return StreakCalculator.calculate(activeDates: activeDates, today: today);
     } catch (e, st) {
-      AppLogger.error('Failed to get streak data from database', error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to get streak data from database',
+        error: e,
+        stackTrace: st,
+      );
       return StreakData.empty();
     }
   }
@@ -234,7 +276,8 @@ class SqliteHomeRepository implements HomeRepository {
       );
 
       if (settingRows.isNotEmpty) {
-        final rawVal = settingRows.first[AppSettingsTable.columnValue] as String?;
+        final rawVal =
+            settingRows.first[AppSettingsTable.columnValue] as String?;
         if (rawVal != null && rawVal.isNotEmpty) {
           try {
             final list = (jsonDecode(rawVal) as List<dynamic>).cast<String>();
@@ -243,7 +286,11 @@ class SqliteHomeRepository implements HomeRepository {
         }
       }
     } catch (e, st) {
-      AppLogger.error('Failed to get daily challenge state from database', error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to get daily challenge state from database',
+        error: e,
+        stackTrace: st,
+      );
     }
 
     return DailyChallengeGenerator.generate(
@@ -253,7 +300,11 @@ class SqliteHomeRepository implements HomeRepository {
   }
 
   @override
-  Future<void> toggleChallengeItem(DateTime date, String challengeId, bool isCompleted) async {
+  Future<void> toggleChallengeItem(
+    DateTime date,
+    String challengeId,
+    bool isCompleted,
+  ) async {
     final dateKey = _formatDateKey(date);
     final settingKey = 'daily_challenge_$dateKey';
 
@@ -269,7 +320,8 @@ class SqliteHomeRepository implements HomeRepository {
 
       Set<String> completedIds = {};
       if (settingRows.isNotEmpty) {
-        final rawVal = settingRows.first[AppSettingsTable.columnValue] as String?;
+        final rawVal =
+            settingRows.first[AppSettingsTable.columnValue] as String?;
         if (rawVal != null && rawVal.isNotEmpty) {
           try {
             final list = (jsonDecode(rawVal) as List<dynamic>).cast<String>();
@@ -288,14 +340,11 @@ class SqliteHomeRepository implements HomeRepository {
       final jsonValue = jsonEncode(completedIds.toList());
 
       if (settingRows.isEmpty) {
-        await _db.insert(
-          AppSettingsTable.tableName,
-          {
-            AppSettingsTable.columnKey: settingKey,
-            AppSettingsTable.columnValue: jsonValue,
-            AppSettingsTable.columnUpdatedAt: nowIso,
-          },
-        );
+        await _db.insert(AppSettingsTable.tableName, {
+          AppSettingsTable.columnKey: settingKey,
+          AppSettingsTable.columnValue: jsonValue,
+          AppSettingsTable.columnUpdatedAt: nowIso,
+        });
       } else {
         await _db.update(
           AppSettingsTable.tableName,
@@ -308,7 +357,11 @@ class SqliteHomeRepository implements HomeRepository {
         );
       }
     } catch (e, st) {
-      AppLogger.error('Failed to toggle challenge item in database', error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to toggle challenge item in database',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -321,16 +374,22 @@ class SqliteHomeRepository implements HomeRepository {
 
       final rows = await _db.query(
         VocabularyTable.tableName,
-        where: '${VocabularyTable.columnId} = ? OR ${VocabularyTable.columnWord} = ?',
+        where:
+            '${VocabularyTable.columnId} = ? OR ${VocabularyTable.columnWord} = ?',
         whereArgs: [baseWord.id, baseWord.word],
         limit: 1,
       );
 
-      final isSaved = rows.isNotEmpty &&
+      final isSaved =
+          rows.isNotEmpty &&
           ((rows.first[VocabularyTable.columnIsBookmarked] as int?) ?? 0) == 1;
       return baseWord.copyWith(isSaved: isSaved);
     } catch (e, st) {
-      AppLogger.error('Failed to get word of the day from database', error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to get word of the day from database',
+        error: e,
+        stackTrace: st,
+      );
       return baseWord;
     }
   }
@@ -342,40 +401,37 @@ class SqliteHomeRepository implements HomeRepository {
 
       final rows = await _db.query(
         VocabularyTable.tableName,
-        where: '${VocabularyTable.columnId} = ? OR ${VocabularyTable.columnWord} = ?',
+        where:
+            '${VocabularyTable.columnId} = ? OR ${VocabularyTable.columnWord} = ?',
         whereArgs: [word.id, word.word],
         limit: 1,
       );
 
-      final currentSaved = rows.isNotEmpty &&
+      final currentSaved =
+          rows.isNotEmpty &&
           ((rows.first[VocabularyTable.columnIsBookmarked] as int?) ?? 0) == 1;
       final newSaved = !currentSaved;
       final nowIso = DateTime.now().toIso8601String();
 
       if (rows.isEmpty) {
-        await _db.insert(
-          VocabularyTable.tableName,
-          {
-            VocabularyTable.columnId: word.id,
-            VocabularyTable.columnWord: word.word,
-            VocabularyTable.columnPhonetic: word.phonetic,
-            VocabularyTable.columnPartOfSpeech: word.partOfSpeech,
-            VocabularyTable.columnDefinition: word.definition,
-            VocabularyTable.columnExample: word.example,
-            VocabularyTable.columnCefrLevel: word.cefrLevel,
-            VocabularyTable.columnIsBookmarked: newSaved ? 1 : 0,
-            VocabularyTable.columnMasteryLevel: 0,
-            VocabularyTable.columnNextReviewDate: null,
-            VocabularyTable.columnLastReviewedAt: null,
-            VocabularyTable.columnCreatedAt: nowIso,
-          },
-        );
+        await _db.insert(VocabularyTable.tableName, {
+          VocabularyTable.columnId: word.id,
+          VocabularyTable.columnWord: word.word,
+          VocabularyTable.columnPhonetic: word.phonetic,
+          VocabularyTable.columnPartOfSpeech: word.partOfSpeech,
+          VocabularyTable.columnDefinition: word.definition,
+          VocabularyTable.columnExample: word.example,
+          VocabularyTable.columnCefrLevel: word.cefrLevel,
+          VocabularyTable.columnIsBookmarked: newSaved ? 1 : 0,
+          VocabularyTable.columnMasteryLevel: 0,
+          VocabularyTable.columnNextReviewDate: null,
+          VocabularyTable.columnLastReviewedAt: null,
+          VocabularyTable.columnCreatedAt: nowIso,
+        });
       } else {
         await _db.update(
           VocabularyTable.tableName,
-          {
-            VocabularyTable.columnIsBookmarked: newSaved ? 1 : 0,
-          },
+          {VocabularyTable.columnIsBookmarked: newSaved ? 1 : 0},
           where: '${VocabularyTable.columnId} = ?',
           whereArgs: [rows.first[VocabularyTable.columnId]],
         );
@@ -383,7 +439,11 @@ class SqliteHomeRepository implements HomeRepository {
 
       return newSaved;
     } catch (e, st) {
-      AppLogger.error('Failed to toggle bookmark word in database', error: e, stackTrace: st);
+      AppLogger.error(
+        'Failed to toggle bookmark word in database',
+        error: e,
+        stackTrace: st,
+      );
       return !word.isSaved;
     }
   }
@@ -422,8 +482,15 @@ class SqliteHomeRepository implements HomeRepository {
         currentStreakDays: streak.currentStreak,
       );
     } catch (e, st) {
-      AppLogger.error('Failed to get progress snapshot from database', error: e, stackTrace: st);
-      return ProgressSnapshotData.initial(cefrLevel: cefrLevel, levelTitle: levelTitle);
+      AppLogger.error(
+        'Failed to get progress snapshot from database',
+        error: e,
+        stackTrace: st,
+      );
+      return ProgressSnapshotData.initial(
+        cefrLevel: cefrLevel,
+        levelTitle: levelTitle,
+      );
     }
   }
 }

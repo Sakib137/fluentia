@@ -4,27 +4,30 @@ import 'package:fluentia/features/onboarding/domain/scoring/placement_test_evalu
 
 void main() {
   group('PlacementTestEvaluator Tests', () {
-    test('All correct answers yield B2 Upper Intermediate with Strong ratings', () {
-      final answers = <int, int>{};
-      for (int i = 0; i < kBundledPlacementQuestions.length; i++) {
-        answers[i] = kBundledPlacementQuestions[i].correctAnswerIndex;
-      }
+    test(
+      'All correct answers yield B2 Upper Intermediate with Strong ratings',
+      () {
+        final answers = <int, int>{};
+        for (int i = 0; i < kBundledPlacementQuestions.length; i++) {
+          answers[i] = kBundledPlacementQuestions[i].correctAnswerIndex;
+        }
 
-      final result = PlacementTestEvaluator.evaluate(
-        questions: kBundledPlacementQuestions,
-        selectedAnswers: answers,
-      );
+        final result = PlacementTestEvaluator.evaluate(
+          questions: kBundledPlacementQuestions,
+          selectedAnswers: answers,
+        );
 
-      expect(result.totalQuestions, equals(12));
-      expect(result.correctAnswers, equals(12));
-      expect(result.estimatedLevel, equals('B2'));
-      expect(result.levelTitle, equals('Upper Intermediate'));
-      expect(result.scorePercentage, equals(100.0));
+        expect(result.totalQuestions, equals(12));
+        expect(result.correctAnswers, equals(12));
+        expect(result.estimatedLevel, equals('B2'));
+        expect(result.levelTitle, equals('Upper Intermediate'));
+        expect(result.scorePercentage, equals(100.0));
 
-      for (final rating in result.categoryRatings.values) {
-        expect(rating, equals('Strong area'));
-      }
-    });
+        for (final rating in result.categoryRatings.values) {
+          expect(rating, equals('Strong area'));
+        }
+      },
+    );
 
     test('Mid-range score yields B1 Intermediate', () {
       final answers = <int, int>{};

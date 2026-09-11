@@ -19,99 +19,117 @@ class DailyChallengeCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final challengeAsync = ref.watch(dailyChallengeProvider);
     final isDark = context.isDarkMode;
-    final challenge = challengeAsync.value ?? DailyChallengeGenerator.generate(date: DateTime.now());
+    final challenge =
+        challengeAsync.value ??
+        DailyChallengeGenerator.generate(date: DateTime.now());
     final completedCount = challenge.completedCount;
     final totalCount = challenge.totalCount;
 
     return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-          child: AppCard(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      child: AppCard(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.task_alt_rounded,
-                          size: AppIconSizes.md,
-                          color: isDark ? AppColors.primary300 : AppColors.primary600,
-                        ),
-                        const SizedBox(width: AppSpacing.xs + 2),
-                        Text(
-                          'Daily Challenge',
-                          style: TextStyle(
-                            fontSize: AppFontSizes.titleMedium,
-                            fontWeight: AppFontWeights.bold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                          ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.task_alt_rounded,
+                      size: AppIconSizes.md,
+                      color: isDark
+                          ? AppColors.primary300
+                          : AppColors.primary600,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: AppSpacing.xxs + 1,
-                      ),
-                      decoration: BoxDecoration(
-                        color: challenge.isAllCompleted
-                            ? (isDark ? AppColors.primary900 : AppColors.primary50)
-                            : (isDark ? AppColors.slate800 : AppColors.slate100),
-                        borderRadius: AppRadii.roundedFull,
-                        border: Border.all(
-                          color: challenge.isAllCompleted
-                              ? (isDark ? AppColors.primary700 : AppColors.primary200)
-                              : (isDark ? AppColors.darkBorder : AppColors.slate200),
-                        ),
-                      ),
-                      child: Text(
-                        '$completedCount / $totalCount completed',
-                        style: TextStyle(
-                          fontSize: AppFontSizes.caption,
-                          fontWeight: AppFontWeights.semiBold,
-                          color: challenge.isAllCompleted
-                              ? (isDark ? AppColors.primary300 : AppColors.primary700)
-                              : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
-                        ),
+                    const SizedBox(width: AppSpacing.xs + 2),
+                    Text(
+                      'Daily Challenge',
+                      style: TextStyle(
+                        fontSize: AppFontSizes.titleMedium,
+                        fontWeight: AppFontWeights.bold,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                ProgressBar(
-                  value: challenge.progressFraction,
-                  height: 6.0,
-                  color: challenge.isAllCompleted
-                      ? AppColors.primary500
-                      : (isDark ? AppColors.primary400 : AppColors.primary600),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xxs + 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: challenge.isAllCompleted
+                        ? (isDark ? AppColors.primary900 : AppColors.primary50)
+                        : (isDark ? AppColors.slate800 : AppColors.slate100),
+                    borderRadius: AppRadii.roundedFull,
+                    border: Border.all(
+                      color: challenge.isAllCompleted
+                          ? (isDark
+                                ? AppColors.primary700
+                                : AppColors.primary200)
+                          : (isDark
+                                ? AppColors.darkBorder
+                                : AppColors.slate200),
+                    ),
+                  ),
+                  child: Text(
+                    '$completedCount / $totalCount completed',
+                    style: TextStyle(
+                      fontSize: AppFontSizes.caption,
+                      fontWeight: AppFontWeights.semiBold,
+                      color: challenge.isAllCompleted
+                          ? (isDark
+                                ? AppColors.primary300
+                                : AppColors.primary700)
+                          : (isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                ...challenge.items.map((item) {
-                  return _ChallengeItemRow(
-                    item: item,
-                    onToggle: (val) {
-                      ref.read(dailyChallengeProvider.notifier).toggleItem(item.id, val);
-                      if (val) {
-                        // Also contribute duration minutes to today's practice
-                        ref.read(dailyProgressProvider.notifier).logPractice(
-                              minutes: item.durationMinutes,
-                              skillType: item.skillType,
-                            );
-                      }
-                    },
-                    onTapRow: () {
-                      context.go(AppRoutes.practice);
-                    },
-                  );
-                }),
               ],
             ),
-          ),
-        );
+            const SizedBox(height: AppSpacing.sm),
+            ProgressBar(
+              value: challenge.progressFraction,
+              height: 6.0,
+              color: challenge.isAllCompleted
+                  ? AppColors.primary500
+                  : (isDark ? AppColors.primary400 : AppColors.primary600),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            ...challenge.items.map((item) {
+              return _ChallengeItemRow(
+                item: item,
+                onToggle: (val) {
+                  ref
+                      .read(dailyChallengeProvider.notifier)
+                      .toggleItem(item.id, val);
+                  if (val) {
+                    // Also contribute duration minutes to today's practice
+                    ref
+                        .read(dailyProgressProvider.notifier)
+                        .logPractice(
+                          minutes: item.durationMinutes,
+                          skillType: item.skillType,
+                        );
+                  }
+                },
+                onTapRow: () {
+                  context.go(AppRoutes.practice);
+                },
+              );
+            }),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -156,12 +174,18 @@ class _ChallengeItemRow extends StatelessWidget {
                             ? Icons.check_circle_rounded
                             : Icons.radio_button_unchecked_rounded,
                         color: item.isCompleted
-                            ? (isDark ? AppColors.primary400 : AppColors.primary600)
-                            : (isDark ? AppColors.darkTextMuted : AppColors.slate400),
+                            ? (isDark
+                                  ? AppColors.primary400
+                                  : AppColors.primary600)
+                            : (isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.slate400),
                         size: AppIconSizes.md,
                       ),
                       onPressed: () => onToggle(!item.isCompleted),
-                      tooltip: item.isCompleted ? 'Mark incomplete' : 'Mark complete',
+                      tooltip: item.isCompleted
+                          ? 'Mark incomplete'
+                          : 'Mark complete',
                     ),
                   ),
                 ),
@@ -175,10 +199,16 @@ class _ChallengeItemRow extends StatelessWidget {
                         style: TextStyle(
                           fontSize: AppFontSizes.bodyMedium,
                           fontWeight: AppFontWeights.medium,
-                          decoration: item.isCompleted ? TextDecoration.lineThrough : null,
+                          decoration: item.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
                           color: item.isCompleted
-                              ? (isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted)
-                              : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                              ? (isDark
+                                    ? AppColors.darkTextMuted
+                                    : AppColors.lightTextMuted)
+                              : (isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary),
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -190,7 +220,9 @@ class _ChallengeItemRow extends StatelessWidget {
                               vertical: 1,
                             ),
                             decoration: BoxDecoration(
-                              color: isDark ? AppColors.slate800 : AppColors.slate100,
+                              color: isDark
+                                  ? AppColors.slate800
+                                  : AppColors.slate100,
                               borderRadius: AppRadii.roundedXs,
                             ),
                             child: Text(
@@ -198,7 +230,9 @@ class _ChallengeItemRow extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: AppFontSizes.labelSmall,
                                 fontWeight: AppFontWeights.semiBold,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ),
@@ -207,7 +241,9 @@ class _ChallengeItemRow extends StatelessWidget {
                             '${item.durationMinutes} min',
                             style: TextStyle(
                               fontSize: AppFontSizes.labelSmall,
-                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],

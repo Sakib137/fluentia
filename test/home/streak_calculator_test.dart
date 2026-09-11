@@ -17,32 +17,38 @@ void main() {
       expect(result.lastActiveDate, isNull);
     });
 
-    test('Practiced today produces 1 day streak and maintainedToday = true', () {
-      final result = StreakCalculator.calculate(
-        activeDates: [referenceToday],
-        today: referenceToday,
-      );
+    test(
+      'Practiced today produces 1 day streak and maintainedToday = true',
+      () {
+        final result = StreakCalculator.calculate(
+          activeDates: [referenceToday],
+          today: referenceToday,
+        );
 
-      expect(result.currentStreak, 1);
-      expect(result.longestStreak, 1);
-      expect(result.isMaintainedToday, isTrue);
-      expect(result.lastActiveDate, referenceToday);
-    });
+        expect(result.currentStreak, 1);
+        expect(result.longestStreak, 1);
+        expect(result.isMaintainedToday, isTrue);
+        expect(result.lastActiveDate, referenceToday);
+      },
+    );
 
-    test('Practiced yesterday but not today preserves active streak with isMaintainedToday = false', () {
-      final yesterday = referenceToday.subtract(const Duration(days: 1));
-      final twoDaysAgo = referenceToday.subtract(const Duration(days: 2));
+    test(
+      'Practiced yesterday but not today preserves active streak with isMaintainedToday = false',
+      () {
+        final yesterday = referenceToday.subtract(const Duration(days: 1));
+        final twoDaysAgo = referenceToday.subtract(const Duration(days: 2));
 
-      final result = StreakCalculator.calculate(
-        activeDates: [yesterday, twoDaysAgo],
-        today: referenceToday,
-      );
+        final result = StreakCalculator.calculate(
+          activeDates: [yesterday, twoDaysAgo],
+          today: referenceToday,
+        );
 
-      expect(result.currentStreak, 2);
-      expect(result.longestStreak, 2);
-      expect(result.isMaintainedToday, isFalse);
-      expect(result.lastActiveDate, yesterday);
-    });
+        expect(result.currentStreak, 2);
+        expect(result.longestStreak, 2);
+        expect(result.isMaintainedToday, isFalse);
+        expect(result.lastActiveDate, yesterday);
+      },
+    );
 
     test('Missed yesterday resets current streak to 0', () {
       final twoDaysAgo = referenceToday.subtract(const Duration(days: 2));

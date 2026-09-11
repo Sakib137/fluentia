@@ -21,8 +21,8 @@ class LocalOnboardingRepository implements OnboardingRepository {
   LocalOnboardingRepository({
     required PreferencesService preferencesService,
     required DatabaseService databaseService,
-  })  : _prefs = preferencesService,
-        _db = databaseService;
+  }) : _prefs = preferencesService,
+       _db = databaseService;
 
   final PreferencesService _prefs;
   final DatabaseService _db;
@@ -50,7 +50,8 @@ class LocalOnboardingRepository implements OnboardingRepository {
       );
 
       if (dbResults.isNotEmpty) {
-        final rawJson = dbResults.first[AppSettingsTable.columnValue] as String?;
+        final rawJson =
+            dbResults.first[AppSettingsTable.columnValue] as String?;
         if (rawJson != null && rawJson.isNotEmpty) {
           return OnboardingStateModel.fromJson(rawJson);
         }
@@ -95,14 +96,11 @@ class LocalOnboardingRepository implements OnboardingRepository {
 
       // Persist to SQLite AppSettingsTable
       final now = DateTime.now().toIso8601String();
-      await _db.insert(
-        AppSettingsTable.tableName,
-        {
-          AppSettingsTable.columnKey: _onboardingDataKey,
-          AppSettingsTable.columnValue: jsonString,
-          AppSettingsTable.columnUpdatedAt: now,
-        },
-      );
+      await _db.insert(AppSettingsTable.tableName, {
+        AppSettingsTable.columnKey: _onboardingDataKey,
+        AppSettingsTable.columnValue: jsonString,
+        AppSettingsTable.columnUpdatedAt: now,
+      });
     } catch (e, st) {
       AppLogger.error(
         'Failed to persist onboarding state',

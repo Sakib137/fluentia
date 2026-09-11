@@ -24,7 +24,8 @@ class PlanGenerator {
     for (final goal in selectedGoals) {
       final normalized = goal.trim().toLowerCase();
 
-      if (normalized.contains('speaking') || normalized.contains('pronunciation')) {
+      if (normalized.contains('speaking') ||
+          normalized.contains('pronunciation')) {
         weights['Speaking'] = (weights['Speaking'] ?? 1.0) + 2.5;
       }
       if (normalized.contains('listening')) {

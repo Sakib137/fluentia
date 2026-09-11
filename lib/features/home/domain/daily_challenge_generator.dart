@@ -173,17 +173,13 @@ class DailyChallengeGenerator {
     final items = templateItems.map((item) {
       // Append dateKey to ensure unique ID per day
       final uniqueId = '${dateKey}_${item.id}';
-      final isCompleted = completedItemIds.contains(uniqueId) || completedItemIds.contains(item.id);
-      return item.copyWith(
-        id: uniqueId,
-        isCompleted: isCompleted,
-      );
+      final isCompleted =
+          completedItemIds.contains(uniqueId) ||
+          completedItemIds.contains(item.id);
+      return item.copyWith(id: uniqueId, isCompleted: isCompleted);
     }).toList();
 
-    return DailyChallengeState(
-      dateKey: dateKey,
-      items: items,
-    );
+    return DailyChallengeState(dateKey: dateKey, items: items);
   }
 
   static String _formatDateKey(DateTime dt) {

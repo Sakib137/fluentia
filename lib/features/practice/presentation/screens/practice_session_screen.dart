@@ -11,15 +11,13 @@ import '../widgets/leave_session_dialog.dart';
 
 /// Screen executing an active practice session with progress tracking and back interception.
 class PracticeSessionScreen extends ConsumerStatefulWidget {
-  const PracticeSessionScreen({
-    super.key,
-    required this.skillId,
-  });
+  const PracticeSessionScreen({super.key, required this.skillId});
 
   final String skillId;
 
   @override
-  ConsumerState<PracticeSessionScreen> createState() => _PracticeSessionScreenState();
+  ConsumerState<PracticeSessionScreen> createState() =>
+      _PracticeSessionScreenState();
 }
 
 class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
@@ -34,7 +32,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
   Future<bool> _handleExitAttempt() async {
     final shouldLeave = await LeaveSessionDialog.show(context);
     if (shouldLeave && mounted) {
-      await ref.read(practiceSessionControllerProvider.notifier).abandonSession();
+      await ref
+          .read(practiceSessionControllerProvider.notifier)
+          .abandonSession();
       if (mounted) {
         context.pop();
       }
@@ -65,7 +65,10 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
 
     if (session == null || currentActivity == null) {
       return Scaffold(
-        appBar: const FluentAppBar(title: 'Practice Session', showBackButton: true),
+        appBar: const FluentAppBar(
+          title: 'Practice Session',
+          showBackButton: true,
+        ),
         body: Center(
           child: EmptyState(
             icon: Icons.error_outline_rounded,
@@ -114,7 +117,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                           style: TextStyle(
                             fontSize: AppFontSizes.titleMedium,
                             fontWeight: AppFontWeights.semiBold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         Text(
@@ -122,7 +127,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                           style: TextStyle(
                             fontSize: AppFontSizes.labelMedium,
                             fontWeight: AppFontWeights.medium,
-                            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextMuted
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
@@ -133,7 +140,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                       child: LinearProgressIndicator(
                         value: progressFraction,
                         minHeight: 6,
-                        backgroundColor: isDark ? AppColors.slate800 : AppColors.slate200,
+                        backgroundColor: isDark
+                            ? AppColors.slate800
+                            : AppColors.slate200,
                         valueColor: AlwaysStoppedAnimation<Color>(
                           isDark ? AppColors.primary400 : AppColors.primary600,
                         ),
@@ -157,10 +166,14 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                             vertical: AppSpacing.xxs + 1,
                           ),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.slate800 : AppColors.primary50,
+                            color: isDark
+                                ? AppColors.slate800
+                                : AppColors.primary50,
                             borderRadius: AppRadii.roundedFull,
                             border: Border.all(
-                              color: isDark ? AppColors.darkBorder : AppColors.primary100,
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.primary100,
                             ),
                           ),
                           child: Text(
@@ -168,7 +181,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                             style: TextStyle(
                               fontSize: AppFontSizes.caption,
                               fontWeight: AppFontWeights.semiBold,
-                              color: isDark ? AppColors.primary300 : AppColors.primary700,
+                              color: isDark
+                                  ? AppColors.primary300
+                                  : AppColors.primary700,
                             ),
                           ),
                         ),
@@ -179,14 +194,18 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                             vertical: AppSpacing.xxs + 1,
                           ),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.slate800 : AppColors.slate100,
+                            color: isDark
+                                ? AppColors.slate800
+                                : AppColors.slate100,
                             borderRadius: AppRadii.roundedFull,
                           ),
                           child: Text(
                             '${currentActivity.level} • ${currentActivity.difficulty}',
                             style: TextStyle(
                               fontSize: AppFontSizes.caption,
-                              color: isDark ? AppColors.slate300 : AppColors.slate700,
+                              color: isDark
+                                  ? AppColors.slate300
+                                  : AppColors.slate700,
                             ),
                           ),
                         ),
@@ -199,7 +218,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                       style: TextStyle(
                         fontSize: AppFontSizes.headlineSmall,
                         fontWeight: AppFontWeights.bold,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -210,7 +231,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                         color: isDark ? AppColors.slate800 : AppColors.slate100,
                         borderRadius: AppRadii.roundedLg,
                         border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                       ),
                       child: Row(
@@ -219,7 +242,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                           Icon(
                             Icons.info_outline_rounded,
                             size: AppIconSizes.md,
-                            color: isDark ? AppColors.primary300 : AppColors.primary700,
+                            color: isDark
+                                ? AppColors.primary300
+                                : AppColors.primary700,
                           ),
                           const SizedBox(width: AppSpacing.sm),
                           Expanded(
@@ -228,7 +253,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                               style: TextStyle(
                                 fontSize: AppFontSizes.bodyMedium,
                                 height: 1.45,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                           ),
@@ -243,10 +270,14 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                     Container(
                       padding: AppSpacing.cardPadding,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.slate900 : AppColors.primary50.withValues(alpha: 0.5),
+                        color: isDark
+                            ? AppColors.slate900
+                            : AppColors.primary50.withValues(alpha: 0.5),
                         borderRadius: AppRadii.roundedLg,
                         border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.primary100,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.primary100,
                         ),
                       ),
                       child: Column(
@@ -257,7 +288,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                               Icon(
                                 Icons.verified_outlined,
                                 size: AppIconSizes.sm,
-                                color: isDark ? AppColors.primary300 : AppColors.primary700,
+                                color: isDark
+                                    ? AppColors.primary300
+                                    : AppColors.primary700,
                               ),
                               const SizedBox(width: AppSpacing.xs),
                               Text(
@@ -265,7 +298,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                                 style: TextStyle(
                                   fontSize: AppFontSizes.labelMedium,
                                   fontWeight: AppFontWeights.semiBold,
-                                  color: isDark ? AppColors.primary300 : AppColors.primary700,
+                                  color: isDark
+                                      ? AppColors.primary300
+                                      : AppColors.primary700,
                                 ),
                               ),
                             ],
@@ -276,7 +311,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                             style: TextStyle(
                               fontSize: AppFontSizes.caption,
                               height: 1.4,
-                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -289,7 +326,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
               Padding(
                 padding: AppSpacing.screenPadding,
                 child: PrimaryButton(
-                  label: sessionState.isLastActivity ? 'Complete Practice ✓' : 'Next Activity →',
+                  label: sessionState.isLastActivity
+                      ? 'Complete Practice ✓'
+                      : 'Next Activity →',
                   icon: Icon(
                     sessionState.isLastActivity
                         ? Icons.check_circle_outline_rounded
@@ -338,7 +377,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                 fontSize: AppFontSizes.bodyMedium,
                 height: 1.5,
                 fontStyle: FontStyle.italic,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -358,7 +399,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
               style: TextStyle(
                 fontSize: AppFontSizes.bodyMedium,
                 height: 1.45,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ],
@@ -387,7 +430,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
               style: TextStyle(
                 fontSize: AppFontSizes.bodyMedium,
                 height: 1.45,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ],

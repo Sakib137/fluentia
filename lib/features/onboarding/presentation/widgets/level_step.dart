@@ -24,37 +24,43 @@ const List<EnglishLevelOption> kLevelOptions = [
     code: 'A1',
     title: 'Beginner',
     subtitle: 'CEFR A1',
-    description: 'I know basic words, numbers, and very simple everyday greetings.',
+    description:
+        'I know basic words, numbers, and very simple everyday greetings.',
   ),
   EnglishLevelOption(
     code: 'A2',
     title: 'Elementary',
     subtitle: 'CEFR A2',
-    description: 'I can understand simple sentences and communicate in routine tasks.',
+    description:
+        'I can understand simple sentences and communicate in routine tasks.',
   ),
   EnglishLevelOption(
     code: 'B1',
     title: 'Intermediate',
     subtitle: 'CEFR B1',
-    description: 'I can converse comfortably on familiar topics, travel, and personal interests.',
+    description:
+        'I can converse comfortably on familiar topics, travel, and personal interests.',
   ),
   EnglishLevelOption(
     code: 'B2',
     title: 'Upper Intermediate',
     subtitle: 'CEFR B2',
-    description: 'I speak fluently with native speakers and understand detailed texts.',
+    description:
+        'I speak fluently with native speakers and understand detailed texts.',
   ),
   EnglishLevelOption(
     code: 'C1',
     title: 'Advanced',
     subtitle: 'CEFR C1',
-    description: 'I express ideas spontaneously and flexibly for academic and professional use.',
+    description:
+        'I express ideas spontaneously and flexibly for academic and professional use.',
   ),
   EnglishLevelOption(
     code: 'not_sure',
     title: 'I\'m not sure',
     subtitle: 'Assessment Recommended',
-    description: 'We will help you gauge your starting level with our quick placement check.',
+    description:
+        'We will help you gauge your starting level with our quick placement check.',
   ),
 ];
 
@@ -89,7 +95,8 @@ class LevelStep extends StatelessWidget {
                 children: [
                   const SectionHeader(
                     title: 'How would you describe your English?',
-                    subtitle: 'Select the level that feels closest to your current experience',
+                    subtitle:
+                        'Select the level that feels closest to your current experience',
                   ),
                   const SizedBox(height: AppSpacing.md),
                   ...kLevelOptions.map((opt) {
@@ -106,13 +113,23 @@ class LevelStep extends StatelessWidget {
                             padding: const EdgeInsets.all(AppSpacing.md),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? (isDark ? AppColors.primary900.withValues(alpha: 0.3) : AppColors.primary50)
-                                  : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                                  ? (isDark
+                                        ? AppColors.primary900.withValues(
+                                            alpha: 0.3,
+                                          )
+                                        : AppColors.primary50)
+                                  : (isDark
+                                        ? AppColors.darkSurface
+                                        : AppColors.lightSurface),
                               borderRadius: AppRadii.roundedLg,
                               border: Border.all(
                                 color: isSelected
-                                    ? (isDark ? AppColors.primary500 : AppColors.primary600)
-                                    : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                    ? (isDark
+                                          ? AppColors.primary500
+                                          : AppColors.primary600)
+                                    : (isDark
+                                          ? AppColors.darkBorder
+                                          : AppColors.lightBorder),
                                 width: isSelected ? 1.8 : 1.0,
                               ),
                             ),
@@ -124,8 +141,12 @@ class LevelStep extends StatelessWidget {
                                   height: 44,
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? (isDark ? AppColors.primary800 : AppColors.primary100)
-                                        : (isDark ? AppColors.slate800 : AppColors.slate100),
+                                        ? (isDark
+                                              ? AppColors.primary800
+                                              : AppColors.primary100)
+                                        : (isDark
+                                              ? AppColors.slate800
+                                              : AppColors.slate100),
                                     borderRadius: AppRadii.roundedMd,
                                   ),
                                   alignment: Alignment.center,
@@ -135,15 +156,20 @@ class LevelStep extends StatelessWidget {
                                       fontSize: AppFontSizes.titleSmall,
                                       fontWeight: AppFontWeights.bold,
                                       color: isSelected
-                                          ? (isDark ? AppColors.primary300 : AppColors.primary700)
-                                          : (isDark ? AppColors.slate300 : AppColors.slate700),
+                                          ? (isDark
+                                                ? AppColors.primary300
+                                                : AppColors.primary700)
+                                          : (isDark
+                                                ? AppColors.slate300
+                                                : AppColors.slate700),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: AppSpacing.md),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -151,10 +177,17 @@ class LevelStep extends StatelessWidget {
                                             opt.title,
                                             style: TextStyle(
                                               fontSize: AppFontSizes.bodyLarge,
-                                              fontWeight: AppFontWeights.semiBold,
+                                              fontWeight:
+                                                  AppFontWeights.semiBold,
                                               color: isSelected
-                                                  ? (isDark ? AppColors.primary300 : AppColors.primary800)
-                                                  : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                                                  ? (isDark
+                                                        ? AppColors.primary300
+                                                        : AppColors.primary800)
+                                                  : (isDark
+                                                        ? AppColors
+                                                              .darkTextPrimary
+                                                        : AppColors
+                                                              .lightTextPrimary),
                                             ),
                                           ),
                                           const SizedBox(width: AppSpacing.sm),
@@ -162,7 +195,9 @@ class LevelStep extends StatelessWidget {
                                             '• ${opt.subtitle}',
                                             style: TextStyle(
                                               fontSize: AppFontSizes.bodySmall,
-                                              color: isDark ? AppColors.slate500 : AppColors.slate400,
+                                              color: isDark
+                                                  ? AppColors.slate500
+                                                  : AppColors.slate400,
                                             ),
                                           ),
                                         ],
@@ -172,7 +207,9 @@ class LevelStep extends StatelessWidget {
                                         opt.description,
                                         style: TextStyle(
                                           fontSize: AppFontSizes.bodySmall,
-                                          color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                                          color: isDark
+                                              ? AppColors.darkTextMuted
+                                              : AppColors.lightTextSecondary,
                                           height: 1.4,
                                         ),
                                       ),
@@ -186,8 +223,12 @@ class LevelStep extends StatelessWidget {
                                       : Icons.radio_button_unchecked_rounded,
                                   size: AppIconSizes.md,
                                   color: isSelected
-                                      ? (isDark ? AppColors.primary400 : AppColors.primary600)
-                                      : (isDark ? AppColors.slate600 : AppColors.slate300),
+                                      ? (isDark
+                                            ? AppColors.primary400
+                                            : AppColors.primary600)
+                                      : (isDark
+                                            ? AppColors.slate600
+                                            : AppColors.slate300),
                                 ),
                               ],
                             ),
@@ -216,10 +257,7 @@ class LevelStep extends StatelessWidget {
             ),
             child: Row(
               children: [
-                SecondaryButton(
-                  label: AppStrings.back,
-                  onPressed: onBack,
-                ),
+                SecondaryButton(label: AppStrings.back, onPressed: onBack),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: PrimaryButton(

@@ -82,10 +82,7 @@ class PlacementTestNotifier extends Notifier<PlacementTestState> {
       selectedAnswers: state.selectedAnswers,
     );
 
-    state = state.copyWith(
-      isSubmitted: true,
-      result: evalResult,
-    );
+    state = state.copyWith(isSubmitted: true, result: evalResult);
   }
 
   /// Resets test state for retaking the assessment.
@@ -97,5 +94,5 @@ class PlacementTestNotifier extends Notifier<PlacementTestState> {
 /// Riverpod provider for the active placement test.
 final placementTestProvider =
     NotifierProvider.autoDispose<PlacementTestNotifier, PlacementTestState>(
-  PlacementTestNotifier.new,
-);
+      PlacementTestNotifier.new,
+    );

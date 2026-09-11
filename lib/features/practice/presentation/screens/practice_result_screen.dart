@@ -12,10 +12,7 @@ import '../providers/practice_providers.dart';
 
 /// Screen celebrating session completion, displaying metrics and navigation actions.
 class PracticeResultScreen extends ConsumerWidget {
-  const PracticeResultScreen({
-    super.key,
-    required this.skillId,
-  });
+  const PracticeResultScreen({super.key, required this.skillId});
 
   final String skillId;
 
@@ -26,8 +23,12 @@ class PracticeResultScreen extends ConsumerWidget {
     final sessionState = ref.watch(practiceSessionControllerProvider);
     final session = sessionState.session;
 
-    final durationMinutes = session != null ? (session.durationSeconds / 60).ceil() : 5;
-    final scoreText = session?.score != null ? '${session!.score!.toInt()}%' : '85%';
+    final durationMinutes = session != null
+        ? (session.durationSeconds / 60).ceil()
+        : 5;
+    final scoreText = session?.score != null
+        ? '${session!.score!.toInt()}%'
+        : '85%';
     final activitiesCount = session?.totalActivities ?? 3;
 
     return PopScope(
@@ -54,10 +55,14 @@ class PracticeResultScreen extends ConsumerWidget {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.primary900.withValues(alpha: 0.5) : AppColors.primary50,
+                    color: isDark
+                        ? AppColors.primary900.withValues(alpha: 0.5)
+                        : AppColors.primary50,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isDark ? AppColors.primary700 : AppColors.primary200,
+                      color: isDark
+                          ? AppColors.primary700
+                          : AppColors.primary200,
                       width: 2,
                     ),
                   ),
@@ -73,7 +78,9 @@ class PracticeResultScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.headlineMedium,
                     fontWeight: AppFontWeights.bold,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -90,10 +97,14 @@ class PracticeResultScreen extends ConsumerWidget {
                 Container(
                   padding: AppSpacing.cardPadding,
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.lightSurface,
                     borderRadius: AppRadii.roundedXl,
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
                     boxShadow: isDark ? AppShadows.darkCard : AppShadows.card,
                   ),
@@ -109,7 +120,9 @@ class PracticeResultScreen extends ConsumerWidget {
                       Container(
                         width: 1,
                         height: 40,
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
                       ),
                       _StatColumn(
                         label: 'Score',
@@ -120,7 +133,9 @@ class PracticeResultScreen extends ConsumerWidget {
                       Container(
                         width: 1,
                         height: 40,
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
                       ),
                       _StatColumn(
                         label: 'Activities',
@@ -134,14 +149,18 @@ class PracticeResultScreen extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.lg),
                 // Motivational note
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
                   child: Text(
                     'Great work! Every focused session moves you closer to spontaneous, confident English fluency.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: AppFontSizes.bodyMedium,
                       height: 1.5,
-                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextMuted
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ),
@@ -149,7 +168,10 @@ class PracticeResultScreen extends ConsumerWidget {
                 // Action Buttons
                 PrimaryButton(
                   label: 'Continue',
-                  icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white),
+                  icon: const Icon(
+                    Icons.arrow_forward_rounded,
+                    color: Colors.white,
+                  ),
                   onPressed: () => _navigateBack(context, ref),
                 ),
                 const SizedBox(height: AppSpacing.sm),
@@ -211,7 +233,9 @@ class _StatColumn extends StatelessWidget {
           style: TextStyle(
             fontSize: AppFontSizes.titleMedium,
             fontWeight: AppFontWeights.bold,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: AppSpacing.xxs),
@@ -219,7 +243,9 @@ class _StatColumn extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: AppFontSizes.caption,
-            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextMuted
+                : AppColors.lightTextSecondary,
           ),
         ),
       ],

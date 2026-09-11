@@ -18,6 +18,7 @@ import '../../features/profile/presentation/settings_screen.dart';
 import '../../features/progress/presentation/achievements_screen.dart';
 import '../../features/progress/presentation/progress_screen.dart';
 import '../../features/progress/presentation/statistics_screen.dart';
+import '../../features/speaking/presentation/speaking_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vocabulary/presentation/screens/word_detail_screen.dart';
 import '../../features/vocabulary/presentation/vocabulary_screen.dart';
@@ -84,22 +85,42 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'speaking',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const PracticeIntroScreen(skillId: 'speaking'),
+                    builder: (context, state) => const SpeakingHubScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'session',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) {
+                          final activityId =
+                              state.uri.queryParameters['activityId'];
+                          return SpeakingPracticeScreen(activityId: activityId);
+                        },
+                      ),
+                      GoRoute(
+                        path: 'result',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) =>
+                            const SpeakingResultScreen(),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'listening',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const PracticeIntroScreen(skillId: 'listening'),
+                    builder: (context, state) =>
+                        const PracticeIntroScreen(skillId: 'listening'),
                   ),
                   GoRoute(
                     path: 'reading',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const PracticeIntroScreen(skillId: 'reading'),
+                    builder: (context, state) =>
+                        const PracticeIntroScreen(skillId: 'reading'),
                   ),
                   GoRoute(
                     path: 'writing',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) => const PracticeIntroScreen(skillId: 'writing'),
+                    builder: (context, state) =>
+                        const PracticeIntroScreen(skillId: 'writing'),
                   ),
                   GoRoute(
                     path: ':skill/intro',

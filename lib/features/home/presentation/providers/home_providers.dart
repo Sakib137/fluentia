@@ -23,13 +23,18 @@ class DailyProgressNotifier extends AsyncNotifier<DailyProgressState> {
   @override
   Future<DailyProgressState> build() async {
     final onboardingState = ref.watch(onboardingNotifierProvider);
-    final target = onboardingState.dailyPracticeMinutes > 0 ? onboardingState.dailyPracticeMinutes : 15;
+    final target = onboardingState.dailyPracticeMinutes > 0
+        ? onboardingState.dailyPracticeMinutes
+        : 15;
     final repo = ref.watch(homeRepositoryProvider);
     return repo.getDailyProgress(DateTime.now(), targetMinutes: target);
   }
 
   /// Adds practiced minutes for a skill and reloads dependent state.
-  Future<void> logPractice({required int minutes, required String skillType}) async {
+  Future<void> logPractice({
+    required int minutes,
+    required String skillType,
+  }) async {
     final repo = ref.read(homeRepositoryProvider);
     await repo.logPracticeMinutes(DateTime.now(), minutes, skillType);
     ref.invalidateSelf();
@@ -39,13 +44,17 @@ class DailyProgressNotifier extends AsyncNotifier<DailyProgressState> {
 }
 
 final dailyProgressProvider =
-    AsyncNotifierProvider<DailyProgressNotifier, DailyProgressState>(DailyProgressNotifier.new);
+    AsyncNotifierProvider<DailyProgressNotifier, DailyProgressState>(
+      DailyProgressNotifier.new,
+    );
 
 /// Provider for user streak metrics.
 final streakProvider = FutureProvider<StreakData>((ref) async {
   final repo = ref.watch(homeRepositoryProvider);
   final onboardingState = ref.watch(onboardingNotifierProvider);
-  final target = onboardingState.dailyPracticeMinutes > 0 ? onboardingState.dailyPracticeMinutes : 15;
+  final target = onboardingState.dailyPracticeMinutes > 0
+      ? onboardingState.dailyPracticeMinutes
+      : 15;
   return repo.getStreakData(DateTime.now(), targetMinutes: target);
 });
 
@@ -61,7 +70,7 @@ class DailyChallengeNotifier extends AsyncNotifier<DailyChallengeState> {
   Future<void> toggleItem(String challengeId, bool isCompleted) async {
     final repo = ref.read(homeRepositoryProvider);
     await repo.toggleChallengeItem(DateTime.now(), challengeId, isCompleted);
-    
+
     // Optimistically update or refresh
     final current = state.value;
     if (current != null) {
@@ -71,7 +80,9 @@ class DailyChallengeNotifier extends AsyncNotifier<DailyChallengeState> {
         }
         return item;
       }).toList();
-      state = AsyncData(DailyChallengeState(dateKey: current.dateKey, items: updatedItems));
+      state = AsyncData(
+        DailyChallengeState(dateKey: current.dateKey, items: updatedItems),
+      );
     } else {
       ref.invalidateSelf();
     }
@@ -79,7 +90,9 @@ class DailyChallengeNotifier extends AsyncNotifier<DailyChallengeState> {
 }
 
 final dailyChallengeProvider =
-    AsyncNotifierProvider<DailyChallengeNotifier, DailyChallengeState>(DailyChallengeNotifier.new);
+    AsyncNotifierProvider<DailyChallengeNotifier, DailyChallengeState>(
+      DailyChallengeNotifier.new,
+    );
 
 /// Notifier for the Word of the Day.
 class WordOfTheDayNotifier extends AsyncNotifier<WordOfTheDay> {
@@ -102,16 +115,24 @@ class WordOfTheDayNotifier extends AsyncNotifier<WordOfTheDay> {
 }
 
 final wordOfTheDayProvider =
-    AsyncNotifierProvider<WordOfTheDayNotifier, WordOfTheDay>(WordOfTheDayNotifier.new);
+    AsyncNotifierProvider<WordOfTheDayNotifier, WordOfTheDay>(
+      WordOfTheDayNotifier.new,
+    );
 
 /// Provider for personalized quick practice recommendations.
-final quickPracticeRecommendationsProvider = Provider<List<QuickPracticeItem>>((ref) {
+final quickPracticeRecommendationsProvider = Provider<List<QuickPracticeItem>>((
+  ref,
+) {
   final onboardingState = ref.watch(onboardingNotifierProvider);
-  return PracticeRecommendationEngine.rankRecommendations(onboardingState.selectedGoals);
+  return PracticeRecommendationEngine.rankRecommendations(
+    onboardingState.selectedGoals,
+  );
 });
 
 /// Provider for Progress Snapshot summary statistics.
-final progressSnapshotProvider = FutureProvider<ProgressSnapshotData>((ref) async {
+final progressSnapshotProvider = FutureProvider<ProgressSnapshotData>((
+  ref,
+) async {
   final repo = ref.watch(homeRepositoryProvider);
   final onboardingState = ref.watch(onboardingNotifierProvider);
 
@@ -132,8 +153,5 @@ final progressSnapshotProvider = FutureProvider<ProgressSnapshotData>((ref) asyn
 
   final title = levelTitles[cefr] ?? 'Intermediate';
 
-  return repo.getProgressSnapshot(
-    cefrLevel: cefr,
-    levelTitle: title,
-  );
+  return repo.getProgressSnapshot(cefrLevel: cefr, levelTitle: title);
 });

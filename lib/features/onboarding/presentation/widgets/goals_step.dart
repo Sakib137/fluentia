@@ -113,7 +113,8 @@ class GoalsStep extends StatelessWidget {
                 children: [
                   const SectionHeader(
                     title: 'What would you like to improve?',
-                    subtitle: 'Select all areas you want Fluentia to personalize for you',
+                    subtitle:
+                        'Select all areas you want Fluentia to personalize for you',
                   ),
                   const SizedBox(height: AppSpacing.md),
                   if (selectedGoals.isEmpty)
@@ -123,7 +124,9 @@ class GoalsStep extends StatelessWidget {
                         'Please select at least one learning goal to continue.',
                         style: TextStyle(
                           fontSize: AppFontSizes.bodySmall,
-                          color: isDark ? AppColors.warning400 : AppColors.warning600,
+                          color: isDark
+                              ? AppColors.warning400
+                              : AppColors.warning600,
                           fontWeight: AppFontWeights.medium,
                         ),
                       ),
@@ -142,13 +145,23 @@ class GoalsStep extends StatelessWidget {
                             padding: const EdgeInsets.all(AppSpacing.md),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? (isDark ? AppColors.primary900.withValues(alpha: 0.3) : AppColors.primary50)
-                                  : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                                  ? (isDark
+                                        ? AppColors.primary900.withValues(
+                                            alpha: 0.3,
+                                          )
+                                        : AppColors.primary50)
+                                  : (isDark
+                                        ? AppColors.darkSurface
+                                        : AppColors.lightSurface),
                               borderRadius: AppRadii.roundedLg,
                               border: Border.all(
                                 color: isSelected
-                                    ? (isDark ? AppColors.primary500 : AppColors.primary600)
-                                    : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                    ? (isDark
+                                          ? AppColors.primary500
+                                          : AppColors.primary600)
+                                    : (isDark
+                                          ? AppColors.darkBorder
+                                          : AppColors.lightBorder),
                                 width: isSelected ? 1.8 : 1.0,
                               ),
                             ),
@@ -159,29 +172,40 @@ class GoalsStep extends StatelessWidget {
                                   height: 40,
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? (isDark ? AppColors.primary800 : AppColors.primary100)
-                                        : (isDark ? AppColors.slate800 : AppColors.slate100),
+                                        ? (isDark
+                                              ? AppColors.primary800
+                                              : AppColors.primary100)
+                                        : (isDark
+                                              ? AppColors.slate800
+                                              : AppColors.slate100),
                                     borderRadius: AppRadii.roundedMd,
                                   ),
                                   child: Icon(
                                     goal.icon,
                                     size: AppIconSizes.md,
                                     color: isSelected
-                                        ? (isDark ? AppColors.primary300 : AppColors.primary700)
-                                        : (isDark ? AppColors.slate400 : AppColors.slate600),
+                                        ? (isDark
+                                              ? AppColors.primary300
+                                              : AppColors.primary700)
+                                        : (isDark
+                                              ? AppColors.slate400
+                                              : AppColors.slate600),
                                   ),
                                 ),
                                 const SizedBox(width: AppSpacing.md),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         goal.title,
                                         style: TextStyle(
                                           fontSize: AppFontSizes.bodyLarge,
                                           fontWeight: AppFontWeights.semiBold,
-                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                          color: isDark
+                                              ? AppColors.darkTextPrimary
+                                              : AppColors.lightTextPrimary,
                                         ),
                                       ),
                                       const SizedBox(height: 2),
@@ -189,7 +213,9 @@ class GoalsStep extends StatelessWidget {
                                         goal.description,
                                         style: TextStyle(
                                           fontSize: AppFontSizes.bodySmall,
-                                          color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                                          color: isDark
+                                              ? AppColors.darkTextMuted
+                                              : AppColors.lightTextSecondary,
                                         ),
                                       ),
                                     ],
@@ -202,13 +228,19 @@ class GoalsStep extends StatelessWidget {
                                   height: 22,
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? (isDark ? AppColors.primary400 : AppColors.primary600)
+                                        ? (isDark
+                                              ? AppColors.primary400
+                                              : AppColors.primary600)
                                         : Colors.transparent,
                                     borderRadius: AppRadii.roundedSm,
                                     border: Border.all(
                                       color: isSelected
-                                          ? (isDark ? AppColors.primary400 : AppColors.primary600)
-                                          : (isDark ? AppColors.slate600 : AppColors.slate300),
+                                          ? (isDark
+                                                ? AppColors.primary400
+                                                : AppColors.primary600)
+                                          : (isDark
+                                                ? AppColors.slate600
+                                                : AppColors.slate300),
                                       width: 1.5,
                                     ),
                                   ),
@@ -216,7 +248,9 @@ class GoalsStep extends StatelessWidget {
                                       ? Icon(
                                           Icons.check_rounded,
                                           size: 16,
-                                          color: isDark ? AppColors.slate950 : AppColors.white,
+                                          color: isDark
+                                              ? AppColors.slate950
+                                              : AppColors.white,
                                         )
                                       : null,
                                 ),
@@ -247,10 +281,7 @@ class GoalsStep extends StatelessWidget {
             ),
             child: Row(
               children: [
-                SecondaryButton(
-                  label: AppStrings.back,
-                  onPressed: onBack,
-                ),
+                SecondaryButton(label: AppStrings.back, onPressed: onBack),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: PrimaryButton(

@@ -13,11 +13,7 @@ class ReminderTimeSlot {
   final String? label;
 
   Map<String, dynamic> toMap() {
-    return {
-      'hour': hour,
-      'minute': minute,
-      if (label != null) 'label': label,
-    };
+    return {'hour': hour, 'minute': minute, if (label != null) 'label': label};
   }
 
   factory ReminderTimeSlot.fromMap(Map<String, dynamic> map) {
@@ -28,11 +24,7 @@ class ReminderTimeSlot {
     );
   }
 
-  ReminderTimeSlot copyWith({
-    int? hour,
-    int? minute,
-    String? label,
-  }) {
+  ReminderTimeSlot copyWith({int? hour, int? minute, String? label}) {
     return ReminderTimeSlot(
       hour: hour ?? this.hour,
       minute: minute ?? this.minute,
@@ -101,8 +93,7 @@ class OnboardingStateModel {
       selectedGoals: selectedGoals ?? this.selectedGoals,
       currentLevel: currentLevel ?? this.currentLevel,
       estimatedLevel: estimatedLevel ?? this.estimatedLevel,
-      dailyPracticeMinutes:
-          dailyPracticeMinutes ?? this.dailyPracticeMinutes,
+      dailyPracticeMinutes: dailyPracticeMinutes ?? this.dailyPracticeMinutes,
       remindersEnabled: remindersEnabled ?? this.remindersEnabled,
       reminderCount: reminderCount ?? this.reminderCount,
       reminderTimes: reminderTimes ?? this.reminderTimes,
@@ -152,8 +143,7 @@ class OnboardingStateModel {
           const [
             ReminderTimeSlot(hour: 20, minute: 0, label: 'Evening Practice'),
           ],
-      placementTestCompleted:
-          map['placementTestCompleted'] as bool? ?? false,
+      placementTestCompleted: map['placementTestCompleted'] as bool? ?? false,
       placementTestScore: map['placementTestScore'] as int? ?? 0,
       personalizedPlan:
           (map['personalizedPlan'] as Map<String, dynamic>?)?.map(
@@ -166,7 +156,5 @@ class OnboardingStateModel {
   String toJson() => jsonEncode(toMap());
 
   factory OnboardingStateModel.fromJson(String source) =>
-      OnboardingStateModel.fromMap(
-        jsonDecode(source) as Map<String, dynamic>,
-      );
+      OnboardingStateModel.fromMap(jsonDecode(source) as Map<String, dynamic>);
 }

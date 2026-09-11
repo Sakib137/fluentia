@@ -8,9 +8,10 @@ import '../../domain/services/practice_recommendation_service.dart';
 import 'practice_session_controller.dart';
 
 /// Provider for the pure recommendation and ordering service.
-final practiceRecommendationServiceProvider = Provider<PracticeRecommendationService>((ref) {
-  return const PracticeRecommendationService();
-});
+final practiceRecommendationServiceProvider =
+    Provider<PracticeRecommendationService>((ref) {
+      return const PracticeRecommendationService();
+    });
 
 /// Provider for the SQLite-backed practice repository.
 final practiceRepositoryProvider = Provider<PracticeRepository>((ref) {
@@ -29,13 +30,15 @@ final practiceModulesProvider = Provider<List<PracticeModuleInfo>>((ref) {
     final idx = entry.key;
     final skill = entry.value;
     final isFirst = idx == 0;
-    final userLevel = (onboarding.estimatedLevel != null && onboarding.estimatedLevel!.isNotEmpty)
+    final userLevel =
+        (onboarding.estimatedLevel != null &&
+            onboarding.estimatedLevel!.isNotEmpty)
         ? onboarding.estimatedLevel!
         : (onboarding.currentLevel != null &&
-                onboarding.currentLevel!.isNotEmpty &&
-                onboarding.currentLevel != 'not_sure'
-            ? onboarding.currentLevel!
-            : 'B1');
+                  onboarding.currentLevel!.isNotEmpty &&
+                  onboarding.currentLevel != 'not_sure'
+              ? onboarding.currentLevel!
+              : 'B1');
 
     return PracticeModuleInfo(
       skill: skill,
@@ -52,16 +55,20 @@ final practiceModulesProvider = Provider<List<PracticeModuleInfo>>((ref) {
 });
 
 /// Provider for the deterministically recommended Quick Practice activity.
-final quickPracticeRecommendationProvider = FutureProvider<PracticeActivity>((ref) async {
+final quickPracticeRecommendationProvider = FutureProvider<PracticeActivity>((
+  ref,
+) async {
   final repo = ref.watch(practiceRepositoryProvider);
   final onboarding = ref.watch(onboardingNotifierProvider);
-  final userLevel = (onboarding.estimatedLevel != null && onboarding.estimatedLevel!.isNotEmpty)
+  final userLevel =
+      (onboarding.estimatedLevel != null &&
+          onboarding.estimatedLevel!.isNotEmpty)
       ? onboarding.estimatedLevel!
       : (onboarding.currentLevel != null &&
-              onboarding.currentLevel!.isNotEmpty &&
-              onboarding.currentLevel != 'not_sure'
-          ? onboarding.currentLevel!
-          : 'B1');
+                onboarding.currentLevel!.isNotEmpty &&
+                onboarding.currentLevel != 'not_sure'
+            ? onboarding.currentLevel!
+            : 'B1');
 
   return repo.getRecommendedActivity(
     level: userLevel,
@@ -73,11 +80,13 @@ final quickPracticeRecommendationProvider = FutureProvider<PracticeActivity>((re
 /// Controller provider managing active practice session flow.
 final practiceSessionControllerProvider =
     NotifierProvider<PracticeSessionController, PracticeSessionState>(
-  PracticeSessionController.new,
-);
+      PracticeSessionController.new,
+    );
 
 /// Provider for completed practice history.
-final practiceHistoryProvider = FutureProvider<List<PracticeSession>>((ref) async {
+final practiceHistoryProvider = FutureProvider<List<PracticeSession>>((
+  ref,
+) async {
   final repo = ref.watch(practiceRepositoryProvider);
   return repo.getSessionHistory();
 });

@@ -8,10 +8,7 @@ import '../../../../shared/widgets/widgets.dart';
 
 /// First onboarding step introducing Fluentia's core educational philosophy.
 class WelcomeStep extends StatelessWidget {
-  const WelcomeStep({
-    super.key,
-    required this.onGetStarted,
-  });
+  const WelcomeStep({super.key, required this.onGetStarted});
 
   final VoidCallback onGetStarted;
 
@@ -64,7 +61,9 @@ class WelcomeStep extends StatelessWidget {
                 fontWeight: AppFontWeights.bold,
                 height: 1.2,
                 letterSpacing: -0.8,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -74,7 +73,9 @@ class WelcomeStep extends StatelessWidget {
               style: TextStyle(
                 fontSize: AppFontSizes.bodyLarge,
                 height: 1.5,
-                color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextMuted
+                    : AppColors.lightTextSecondary,
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
@@ -106,14 +107,18 @@ class WelcomeStep extends StatelessWidget {
                           style: TextStyle(
                             fontSize: AppFontSizes.labelLarge,
                             fontWeight: AppFontWeights.semiBold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         Text(
                           'Zero accounts required. Lessons, word banks, and progress stay on your device.',
                           style: TextStyle(
                             fontSize: AppFontSizes.bodySmall,
-                            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextMuted
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],

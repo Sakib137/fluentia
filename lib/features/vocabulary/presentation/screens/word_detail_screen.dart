@@ -12,10 +12,7 @@ import '../../../home/presentation/providers/home_providers.dart';
 
 /// Screen presenting in-depth lexical breakdown for a selected vocabulary word.
 class WordDetailScreen extends ConsumerWidget {
-  const WordDetailScreen({
-    super.key,
-    required this.wordId,
-  });
+  const WordDetailScreen({super.key, required this.wordId});
 
   final String wordId;
 
@@ -78,7 +75,9 @@ class WordDetailScreen extends ConsumerWidget {
                         fontSize: AppFontSizes.displayMedium,
                         fontWeight: AppFontWeights.bold,
                         letterSpacing: -0.5,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     LevelBadge(level: word.cefrLevel),
@@ -92,7 +91,9 @@ class WordDetailScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: AppFontSizes.bodyMedium,
                         fontFamily: 'monospace',
-                        color: isDark ? AppColors.primary300 : AppColors.primary700,
+                        color: isDark
+                            ? AppColors.primary300
+                            : AppColors.primary700,
                       ),
                     ),
                     const SizedBox(width: AppSpacing.sm),
@@ -101,7 +102,9 @@ class WordDetailScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: AppFontSizes.bodySmall,
                         fontStyle: FontStyle.italic,
-                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextMuted
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -112,7 +115,9 @@ class WordDetailScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.labelMedium,
                     fontWeight: AppFontWeights.bold,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -121,7 +126,9 @@ class WordDetailScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.bodyLarge,
                     height: 1.45,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
@@ -130,7 +137,9 @@ class WordDetailScreen extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.labelMedium,
                     fontWeight: AppFontWeights.bold,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -142,7 +151,9 @@ class WordDetailScreen extends ConsumerWidget {
                     borderRadius: AppRadii.roundedMd,
                     border: Border(
                       left: BorderSide(
-                        color: isDark ? AppColors.primary400 : AppColors.primary600,
+                        color: isDark
+                            ? AppColors.primary400
+                            : AppColors.primary600,
                         width: 4.0,
                       ),
                     ),
@@ -153,7 +164,9 @@ class WordDetailScreen extends ConsumerWidget {
                       fontSize: AppFontSizes.bodyMedium,
                       fontStyle: FontStyle.italic,
                       height: 1.4,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ),
@@ -162,13 +175,14 @@ class WordDetailScreen extends ConsumerWidget {
                   text: 'Practice This Word',
                   icon: const Icon(Icons.quiz_rounded, size: AppIconSizes.sm),
                   onPressed: () {
-                    ref.read(dailyProgressProvider.notifier).logPractice(
-                          minutes: 2,
-                          skillType: 'Vocabulary',
-                        );
+                    ref
+                        .read(dailyProgressProvider.notifier)
+                        .logPractice(minutes: 2, skillType: 'Vocabulary');
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Drill completed! +2 min practice logged.'),
+                        content: Text(
+                          'Drill completed! +2 min practice logged.',
+                        ),
                       ),
                     );
                   },

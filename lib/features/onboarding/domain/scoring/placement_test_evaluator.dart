@@ -7,7 +7,8 @@ class PlacementTestEvaluator {
   /// Evaluates answers against provided questions and generates a qualitative result.
   static PlacementResultModel evaluate({
     required List<PlacementQuestionModel> questions,
-    required Map<int, int> selectedAnswers, // questionIndex -> selectedOptionIndex
+    required Map<int, int>
+    selectedAnswers, // questionIndex -> selectedOptionIndex
   }) {
     if (questions.isEmpty) {
       return const PlacementResultModel(
@@ -37,8 +38,10 @@ class PlacementTestEvaluator {
     }
 
     // Determine estimated CEFR level
-    final (estimatedLevel, levelTitle, levelDescription) =
-        _determineLevel(correctCount, questions.length);
+    final (estimatedLevel, levelTitle, levelDescription) = _determineLevel(
+      correctCount,
+      questions.length,
+    );
 
     // Calculate category percentages and qualitative labels
     final categoryScores = <PlacementCategory, double>{};

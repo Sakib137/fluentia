@@ -71,7 +71,9 @@ class _FakeDatabaseService implements DatabaseService {
   Future<void> execute(String sql, [List<Object?>? arguments]) async {}
 
   @override
-  Future<T> transaction<T>(Future<T> Function(DatabaseService txn) action) async {
+  Future<T> transaction<T>(
+    Future<T> Function(DatabaseService txn) action,
+  ) async {
     return action(this);
   }
 }

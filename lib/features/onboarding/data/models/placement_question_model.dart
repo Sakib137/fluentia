@@ -53,7 +53,8 @@ class PlacementResultModel {
   final String levelTitle; // e.g. 'Intermediate'
   final String levelDescription;
   final Map<PlacementCategory, double> categoryScores; // 0.0 to 1.0
-  final Map<PlacementCategory, String> categoryRatings; // e.g. 'Strong area', 'Good foundation', 'Needs practice'
+  final Map<PlacementCategory, String>
+  categoryRatings; // e.g. 'Strong area', 'Good foundation', 'Needs practice'
 
   double get scorePercentage =>
       totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;

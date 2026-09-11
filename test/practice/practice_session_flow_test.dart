@@ -53,63 +53,67 @@ void main() {
       await tester.pumpAndSettle(const Duration(milliseconds: 1500));
     }
 
-    testWidgets('Full session lifecycle: Intro -> Active Session -> Next -> Complete -> Result', (
-      WidgetTester tester,
-    ) async {
-      await pumpApp(tester);
+    testWidgets(
+      'Full session lifecycle: Intro -> Active Session -> Next -> Complete -> Result',
+      (WidgetTester tester) async {
+        await pumpApp(tester);
 
-      final router = container.read(routerProvider);
-      router.go('/practice/speaking/intro');
-      await tester.pumpAndSettle();
+        final router = container.read(routerProvider);
+        router.go('/practice/listening/intro');
+        await tester.pumpAndSettle();
 
-      // 1. Intro Screen
-      expect(find.text('Speaking'), findsWidgets);
-      expect(find.text('Session Overview'), findsOneWidget);
-      expect(find.text('Start Practice'), findsOneWidget);
+        // 1. Intro Screen
+        expect(find.text('Listening'), findsWidgets);
+        expect(find.text('Session Overview'), findsOneWidget);
+        expect(find.text('Start Practice'), findsOneWidget);
 
-      // 2. Start Practice
-      await tester.tap(find.text('Start Practice'));
-      await tester.pumpAndSettle();
+        // 2. Start Practice
+        await tester.tap(find.text('Start Practice'));
+        await tester.pumpAndSettle();
 
-      // 3. Active Session Screen
-      expect(find.text('Activity 1 of 3'), findsOneWidget);
-      expect(find.text('Next Activity →'), findsOneWidget);
+        // 3. Active Session Screen
+        expect(find.text('Activity 1 of 3'), findsOneWidget);
+        expect(find.text('Next Activity →'), findsOneWidget);
 
-      // Advance to Activity 2
-      await tester.tap(find.text('Next Activity →'));
-      await tester.pumpAndSettle();
-      expect(find.text('Activity 2 of 3'), findsOneWidget);
+        // Advance to Activity 2
+        await tester.tap(find.text('Next Activity →'));
+        await tester.pumpAndSettle();
+        expect(find.text('Activity 2 of 3'), findsOneWidget);
 
-      // Advance to Activity 3
-      await tester.tap(find.text('Next Activity →'));
-      await tester.pumpAndSettle();
-      expect(find.text('Activity 3 of 3'), findsOneWidget);
-      expect(find.text('Complete Practice ✓'), findsOneWidget);
+        // Advance to Activity 3
+        await tester.tap(find.text('Next Activity →'));
+        await tester.pumpAndSettle();
+        expect(find.text('Activity 3 of 3'), findsOneWidget);
+        expect(find.text('Complete Practice ✓'), findsOneWidget);
 
-      // Complete Practice
-      await tester.tap(find.text('Complete Practice ✓'));
-      await tester.pumpAndSettle();
+        // Complete Practice
+        await tester.tap(find.text('Complete Practice ✓'));
+        await tester.pumpAndSettle();
 
-      // 4. Result Screen
-      expect(find.text('Practice Complete ✓'), findsOneWidget);
-      expect(find.text('Continue'), findsOneWidget);
-      expect(find.text('Practice Again'), findsOneWidget);
+        // 4. Result Screen
+        expect(find.text('Practice Complete ✓'), findsOneWidget);
+        expect(find.text('Continue'), findsOneWidget);
+        expect(find.text('Practice Again'), findsOneWidget);
 
-      // 5. Verify database recorded session
-      final repo = container.read(practiceRepositoryProvider);
-      final history = await repo.getSessionHistory();
-      expect(history.length, 1);
-      expect(history.first.isCompleted, isTrue);
+        // 5. Verify database recorded session
+        final repo = container.read(practiceRepositoryProvider);
+        final history = await repo.getSessionHistory();
+        expect(history.length, 1);
+        expect(history.first.isCompleted, isTrue);
 
-      final todayMinutes = await repo.getTodayPracticeMinutes();
-      expect(todayMinutes, greaterThan(0));
+        final todayMinutes = await repo.getTodayPracticeMinutes();
+        expect(todayMinutes, greaterThan(0));
 
-      // Tap Continue to return to Practice Hub
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
+        // Tap Continue to return to Practice Hub
+        await tester.tap(find.text('Continue'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Choose a skill and start improving.'), findsOneWidget);
-    });
+        expect(
+          find.text('Choose a skill and start improving.'),
+          findsOneWidget,
+        );
+      },
+    );
 
     testWidgets('Exit confirmation dialog prevents accidental abandonment', (
       WidgetTester tester,

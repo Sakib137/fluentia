@@ -17,7 +17,10 @@ void main() {
     });
 
     test('Career & business goal prioritizes Speaking then Writing', () {
-      final ordered = service.orderSkills(['Career & Business', 'Interview Preparation']);
+      final ordered = service.orderSkills([
+        'Career & Business',
+        'Interview Preparation',
+      ]);
       expect(ordered.first, PracticeSkill.speaking);
       expect(ordered[1], PracticeSkill.writing);
       expect(ordered.contains(PracticeSkill.listening), isTrue);
@@ -37,17 +40,32 @@ void main() {
 
     test('Deterministic quick practice selection is stable for same date', () {
       final date = DateTime(2026, 9, 7, 10, 0);
-      final skill1 = service.selectQuickPracticeSkill(userGoals: ['Career'], date: date);
-      final skill2 = service.selectQuickPracticeSkill(userGoals: ['Career'], date: date);
+      final skill1 = service.selectQuickPracticeSkill(
+        userGoals: ['Career'],
+        date: date,
+      );
+      final skill2 = service.selectQuickPracticeSkill(
+        userGoals: ['Career'],
+        date: date,
+      );
       expect(skill1, equals(skill2));
     });
 
-    test('Quick practice selection alternates across adjacent days for variety', () {
-      final day1 = DateTime(2026, 9, 7);
-      final day2 = DateTime(2026, 9, 8);
-      final skillDay1 = service.selectQuickPracticeSkill(userGoals: ['Career'], date: day1);
-      final skillDay2 = service.selectQuickPracticeSkill(userGoals: ['Career'], date: day2);
-      expect(skillDay1, isNot(equals(skillDay2)));
-    });
+    test(
+      'Quick practice selection alternates across adjacent days for variety',
+      () {
+        final day1 = DateTime(2026, 9, 7);
+        final day2 = DateTime(2026, 9, 8);
+        final skillDay1 = service.selectQuickPracticeSkill(
+          userGoals: ['Career'],
+          date: day1,
+        );
+        final skillDay2 = service.selectQuickPracticeSkill(
+          userGoals: ['Career'],
+          date: day2,
+        );
+        expect(skillDay1, isNot(equals(skillDay2)));
+      },
+    );
   });
 }

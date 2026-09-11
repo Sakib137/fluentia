@@ -182,7 +182,9 @@ class PracticeCard extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: progress!.clamp(0.0, 1.0),
                 minHeight: 6,
-                backgroundColor: isDark ? AppColors.slate800 : AppColors.slate200,
+                backgroundColor: isDark
+                    ? AppColors.slate800
+                    : AppColors.slate200,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   isDark ? AppColors.primary400 : AppColors.primary600,
                 ),

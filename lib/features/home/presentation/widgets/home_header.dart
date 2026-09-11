@@ -34,7 +34,10 @@ class HomeHeader extends ConsumerWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -49,7 +52,9 @@ class HomeHeader extends ConsumerWidget {
                     fontSize: AppFontSizes.headlineLarge,
                     fontWeight: AppFontWeights.bold,
                     letterSpacing: -0.5,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxs + 2),
@@ -58,7 +63,9 @@ class HomeHeader extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.bodyMedium,
                     fontWeight: AppFontWeights.regular,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],

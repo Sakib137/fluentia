@@ -18,8 +18,10 @@ class OnboardingNotifier extends Notifier<OnboardingStateModel> {
     return const OnboardingStateModel();
   }
 
-  OnboardingRepository get _repository => ref.read(onboardingRepositoryProvider);
-  NotificationService get _notificationService => ref.read(notificationServiceProvider);
+  OnboardingRepository get _repository =>
+      ref.read(onboardingRepositoryProvider);
+  NotificationService get _notificationService =>
+      ref.read(notificationServiceProvider);
 
   Future<void> _loadInitialState() async {
     final savedState = await _repository.getOnboardingState();
@@ -61,25 +63,42 @@ class OnboardingNotifier extends Notifier<OnboardingStateModel> {
   void setReminderCount(int count) {
     final newTimes = <ReminderTimeSlot>[];
     if (count == 1) {
-      newTimes.add(const ReminderTimeSlot(hour: 20, minute: 0, label: 'Evening Practice'));
+      newTimes.add(
+        const ReminderTimeSlot(hour: 20, minute: 0, label: 'Evening Practice'),
+      );
     } else if (count == 2) {
-      newTimes.add(const ReminderTimeSlot(hour: 8, minute: 30, label: 'Morning Practice'));
-      newTimes.add(const ReminderTimeSlot(hour: 20, minute: 0, label: 'Evening Review'));
+      newTimes.add(
+        const ReminderTimeSlot(hour: 8, minute: 30, label: 'Morning Practice'),
+      );
+      newTimes.add(
+        const ReminderTimeSlot(hour: 20, minute: 0, label: 'Evening Review'),
+      );
     } else if (count == 3) {
-      newTimes.add(const ReminderTimeSlot(hour: 8, minute: 30, label: 'Morning Kickoff'));
-      newTimes.add(const ReminderTimeSlot(hour: 13, minute: 0, label: 'Midday Vocabulary'));
-      newTimes.add(const ReminderTimeSlot(hour: 20, minute: 0, label: 'Evening Review'));
+      newTimes.add(
+        const ReminderTimeSlot(hour: 8, minute: 30, label: 'Morning Kickoff'),
+      );
+      newTimes.add(
+        const ReminderTimeSlot(hour: 13, minute: 0, label: 'Midday Vocabulary'),
+      );
+      newTimes.add(
+        const ReminderTimeSlot(hour: 20, minute: 0, label: 'Evening Review'),
+      );
     } else {
-      newTimes.add(const ReminderTimeSlot(hour: 8, minute: 0, label: 'Morning Drill'));
-      newTimes.add(const ReminderTimeSlot(hour: 12, minute: 30, label: 'Lunch Break'));
-      newTimes.add(const ReminderTimeSlot(hour: 17, minute: 30, label: 'Commute Session'));
-      newTimes.add(const ReminderTimeSlot(hour: 21, minute: 0, label: 'Night Wrap-up'));
+      newTimes.add(
+        const ReminderTimeSlot(hour: 8, minute: 0, label: 'Morning Drill'),
+      );
+      newTimes.add(
+        const ReminderTimeSlot(hour: 12, minute: 30, label: 'Lunch Break'),
+      );
+      newTimes.add(
+        const ReminderTimeSlot(hour: 17, minute: 30, label: 'Commute Session'),
+      );
+      newTimes.add(
+        const ReminderTimeSlot(hour: 21, minute: 0, label: 'Night Wrap-up'),
+      );
     }
 
-    state = state.copyWith(
-      reminderCount: count,
-      reminderTimes: newTimes,
-    );
+    state = state.copyWith(reminderCount: count, reminderTimes: newTimes);
     _persistDraft();
   }
 
@@ -106,7 +125,8 @@ class OnboardingNotifier extends Notifier<OnboardingStateModel> {
   /// Removes a custom reminder slot.
   void removeReminderSlot(int index) {
     if (state.reminderTimes.length <= 1) return;
-    final updated = List<ReminderTimeSlot>.from(state.reminderTimes)..removeAt(index);
+    final updated = List<ReminderTimeSlot>.from(state.reminderTimes)
+      ..removeAt(index);
     state = state.copyWith(
       reminderCount: updated.length,
       reminderTimes: updated,
@@ -125,7 +145,8 @@ class OnboardingNotifier extends Notifier<OnboardingStateModel> {
 
   /// Records placement test results and regenerates plan if appropriate.
   void recordPlacementResult(PlacementResultModel result) {
-    final updatedLevel = (state.currentLevel == null || state.currentLevel == 'not_sure')
+    final updatedLevel =
+        (state.currentLevel == null || state.currentLevel == 'not_sure')
         ? result.estimatedLevel
         : state.currentLevel;
 
@@ -180,4 +201,6 @@ class OnboardingNotifier extends Notifier<OnboardingStateModel> {
 
 /// Riverpod provider exposing the [OnboardingNotifier].
 final onboardingNotifierProvider =
-    NotifierProvider<OnboardingNotifier, OnboardingStateModel>(OnboardingNotifier.new);
+    NotifierProvider<OnboardingNotifier, OnboardingStateModel>(
+      OnboardingNotifier.new,
+    );

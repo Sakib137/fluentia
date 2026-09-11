@@ -26,13 +26,12 @@ class StreakCalculator {
 
     final referenceDate = today ?? DateTime.now();
     final normalizedToday = _normalizeDate(referenceDate);
-    final normalizedYesterday = normalizedToday.subtract(const Duration(days: 1));
+    final normalizedYesterday = normalizedToday.subtract(
+      const Duration(days: 1),
+    );
 
     // Normalize and deduplicate active dates
-    final uniqueSortedDates = activeDates
-        .map(_normalizeDate)
-        .toSet()
-        .toList()
+    final uniqueSortedDates = activeDates.map(_normalizeDate).toSet().toList()
       ..sort((a, b) => b.compareTo(a)); // Descending order (newest first)
 
     if (uniqueSortedDates.isEmpty) {
@@ -46,7 +45,9 @@ class StreakCalculator {
     // If neither today nor yesterday has activity, current streak is broken
     int currentStreak = 0;
     if (isMaintainedToday || practicedYesterday) {
-      DateTime checkDate = isMaintainedToday ? normalizedToday : normalizedYesterday;
+      DateTime checkDate = isMaintainedToday
+          ? normalizedToday
+          : normalizedYesterday;
       for (final date in uniqueSortedDates) {
         if (date.isAtSameMomentAs(checkDate)) {
           currentStreak++;

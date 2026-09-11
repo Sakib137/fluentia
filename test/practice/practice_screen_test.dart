@@ -45,36 +45,40 @@ void main() {
       );
     }
 
-    testWidgets('Renders Practice Hub header, quick practice card, and 4 skill cards', (
-      WidgetTester tester,
-    ) async {
-      tester.view.physicalSize = const Size(1080, 4800);
-      tester.view.devicePixelRatio = 1.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets(
+      'Renders Practice Hub header, quick practice card, and 4 skill cards',
+      (WidgetTester tester) async {
+        tester.view.physicalSize = const Size(1080, 4800);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
 
-      await tester.pumpWidget(createTestWidget());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(createTestWidget());
+        await tester.pumpAndSettle();
 
-      // 1. App Bar
-      expect(find.text(AppStrings.practiceTitle), findsOneWidget);
-      expect(find.text('Choose a skill and start improving.'), findsOneWidget);
+        // 1. App Bar
+        expect(find.text(AppStrings.practiceTitle), findsOneWidget);
+        expect(
+          find.text('Choose a skill and start improving.'),
+          findsOneWidget,
+        );
 
-      // 2. Quick Practice Card
-      expect(find.text('Quick Practice'), findsOneWidget);
-      expect(find.text('5-minute session'), findsOneWidget);
-      expect(find.text('Start Quick Practice'), findsOneWidget);
+        // 2. Quick Practice Card
+        expect(find.text('Quick Practice'), findsOneWidget);
+        expect(find.text('5-minute session'), findsOneWidget);
+        expect(find.text('Start Quick Practice'), findsOneWidget);
 
-      // 3. Section Header
-      expect(find.text('Core Skills'), findsOneWidget);
+        // 3. Section Header
+        expect(find.text('Core Skills'), findsOneWidget);
 
-      // 4. 4 Skill Cards
-      expect(find.text(AppStrings.speakingTitle), findsWidgets);
-      expect(find.text(AppStrings.listeningTitle), findsWidgets);
-      expect(find.text(AppStrings.readingTitle), findsWidgets);
-      expect(find.text(AppStrings.writingTitle), findsWidgets);
-      expect(find.text('5 min'), findsWidgets);
-      expect(find.text('Start Practice'), findsWidgets);
-    });
+        // 4. 4 Skill Cards
+        expect(find.text(AppStrings.speakingTitle), findsWidgets);
+        expect(find.text(AppStrings.listeningTitle), findsWidgets);
+        expect(find.text(AppStrings.readingTitle), findsWidgets);
+        expect(find.text(AppStrings.writingTitle), findsWidgets);
+        expect(find.text('5 min'), findsWidgets);
+        expect(find.text('Start Practice'), findsWidgets);
+      },
+    );
 
     testWidgets('Pull to refresh executes cleanly without errors', (
       WidgetTester tester,

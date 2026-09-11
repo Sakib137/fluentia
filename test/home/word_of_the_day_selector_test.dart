@@ -19,14 +19,17 @@ void main() {
       expect(word.isSaved, isFalse);
     });
 
-    test('Selection is completely deterministic on repeated invocations for same date', () {
-      final word1 = WordOfTheDaySelector.selectWord(dateA);
-      final word2 = WordOfTheDaySelector.selectWord(dateA);
+    test(
+      'Selection is completely deterministic on repeated invocations for same date',
+      () {
+        final word1 = WordOfTheDaySelector.selectWord(dateA);
+        final word2 = WordOfTheDaySelector.selectWord(dateA);
 
-      expect(word1.id, word2.id);
-      expect(word1.word, word2.word);
-      expect(word1.definition, word2.definition);
-    });
+        expect(word1.id, word2.id);
+        expect(word1.word, word2.word);
+        expect(word1.definition, word2.definition);
+      },
+    );
 
     test('Different calendar days produce different words in cycle', () {
       final wordA = WordOfTheDaySelector.selectWord(dateA);
@@ -39,7 +42,10 @@ void main() {
       final savedWord = WordOfTheDaySelector.selectWord(dateA, isSaved: true);
       expect(savedWord.isSaved, isTrue);
 
-      final unsavedWord = WordOfTheDaySelector.selectWord(dateA, isSaved: false);
+      final unsavedWord = WordOfTheDaySelector.selectWord(
+        dateA,
+        isSaved: false,
+      );
       expect(unsavedWord.isSaved, isFalse);
     });
   });

@@ -16,9 +16,7 @@ void main() {
       await fakeDb.initialize();
 
       container = ProviderContainer(
-        overrides: [
-          databaseServiceProvider.overrideWithValue(fakeDb),
-        ],
+        overrides: [databaseServiceProvider.overrideWithValue(fakeDb)],
       );
     });
 
@@ -33,20 +31,30 @@ void main() {
       expect(state.isLoading, isFalse);
     });
 
-    test('initializeSession loads activities and builds unstarted session', () async {
-      final controller = container.read(practiceSessionControllerProvider.notifier);
-      await controller.initializeSession(skill: PracticeSkill.speaking, level: 'B1');
+    test(
+      'initializeSession loads activities and builds unstarted session',
+      () async {
+        final controller = container.read(
+          practiceSessionControllerProvider.notifier,
+        );
+        await controller.initializeSession(
+          skill: PracticeSkill.speaking,
+          level: 'B1',
+        );
 
-      final state = container.read(practiceSessionControllerProvider);
-      expect(state.session, isNotNull);
-      expect(state.session!.status, PracticeSessionStatus.notStarted);
-      expect(state.activities, isNotEmpty);
-      expect(state.currentActivity, isNotNull);
-      expect(state.session!.currentActivityIndex, 0);
-    });
+        final state = container.read(practiceSessionControllerProvider);
+        expect(state.session, isNotNull);
+        expect(state.session!.status, PracticeSessionStatus.notStarted);
+        expect(state.activities, isNotEmpty);
+        expect(state.currentActivity, isNotNull);
+        expect(state.session!.currentActivityIndex, 0);
+      },
+    );
 
     test('startSession transitions status to inProgress', () async {
-      final controller = container.read(practiceSessionControllerProvider.notifier);
+      final controller = container.read(
+        practiceSessionControllerProvider.notifier,
+      );
       await controller.initializeSession(skill: PracticeSkill.listening);
       controller.startSession();
 
@@ -55,35 +63,58 @@ void main() {
     });
 
     test('nextActivity advances current activity index', () async {
-      final controller = container.read(practiceSessionControllerProvider.notifier);
+      final controller = container.read(
+        practiceSessionControllerProvider.notifier,
+      );
       await controller.initializeSession(skill: PracticeSkill.reading);
       controller.startSession();
 
-      expect(container.read(practiceSessionControllerProvider).session!.currentActivityIndex, 0);
+      expect(
+        container
+            .read(practiceSessionControllerProvider)
+            .session!
+            .currentActivityIndex,
+        0,
+      );
 
       controller.nextActivity();
-      expect(container.read(practiceSessionControllerProvider).session!.currentActivityIndex, 1);
+      expect(
+        container
+            .read(practiceSessionControllerProvider)
+            .session!
+            .currentActivityIndex,
+        1,
+      );
     });
 
-    test('completeSession marks completed and persists to repository', () async {
-      final controller = container.read(practiceSessionControllerProvider.notifier);
-      await controller.initializeSession(skill: PracticeSkill.writing);
-      controller.startSession();
+    test(
+      'completeSession marks completed and persists to repository',
+      () async {
+        final controller = container.read(
+          practiceSessionControllerProvider.notifier,
+        );
+        await controller.initializeSession(skill: PracticeSkill.writing);
+        controller.startSession();
 
-      final completed = await controller.completeSession(score: 95.0);
-      expect(completed, isNotNull);
-      expect(completed!.isCompleted, isTrue);
-      expect(completed.score, 95.0);
-      expect(completed.durationSeconds, greaterThan(0));
+        final completed = await controller.completeSession(score: 95.0);
+        expect(completed, isNotNull);
+        expect(completed!.isCompleted, isTrue);
+        expect(completed.score, 95.0);
+        expect(completed.durationSeconds, greaterThan(0));
 
-      // Verify saved in repository history
-      final history = await container.read(practiceRepositoryProvider).getSessionHistory();
-      expect(history.length, 1);
-      expect(history.first.isCompleted, isTrue);
-    });
+        // Verify saved in repository history
+        final history = await container
+            .read(practiceRepositoryProvider)
+            .getSessionHistory();
+        expect(history.length, 1);
+        expect(history.first.isCompleted, isTrue);
+      },
+    );
 
     test('abandonSession marks status as abandoned', () async {
-      final controller = container.read(practiceSessionControllerProvider.notifier);
+      final controller = container.read(
+        practiceSessionControllerProvider.notifier,
+      );
       await controller.initializeSession(skill: PracticeSkill.speaking);
       controller.startSession();
 
@@ -92,7 +123,9 @@ void main() {
       final state = container.read(practiceSessionControllerProvider);
       expect(state.session!.isAbandoned, isTrue);
 
-      final history = await container.read(practiceRepositoryProvider).getSessionHistory();
+      final history = await container
+          .read(practiceRepositoryProvider)
+          .getSessionHistory();
       expect(history.length, 1);
       expect(history.first.isAbandoned, isTrue);
     });

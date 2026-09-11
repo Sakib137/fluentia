@@ -42,6 +42,8 @@ dependencies:
   path: ^1.9.1
   shared_preferences: ^2.5.5
   timezone: ^0.11.1
+  speech_to_text: ^7.4.0
+  flutter_tts: ^4.2.5
 
 dev_dependencies:
   flutter_test:

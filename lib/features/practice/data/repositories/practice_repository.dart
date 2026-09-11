@@ -7,6 +7,7 @@ import '../../../../core/utils/app_logger.dart';
 import '../../domain/models/practice_models.dart';
 import '../../domain/services/practice_recommendation_service.dart';
 import '../datasources/bundled_practice_content.dart';
+import '../../../speaking/data/datasources/speaking_content.dart';
 
 /// Contract for accessing practice activities and persisting practice sessions.
 abstract class PracticeRepository {
@@ -44,7 +45,10 @@ abstract class PracticeRepository {
 
 /// SQLite-backed implementation of [PracticeRepository].
 class SqlitePracticeRepository implements PracticeRepository {
-  const SqlitePracticeRepository(this._db, [this._recommendationService = const PracticeRecommendationService()]);
+  const SqlitePracticeRepository(
+    this._db, [
+    this._recommendationService = const PracticeRecommendationService(),
+  ]);
 
   final DatabaseService _db;
   final PracticeRecommendationService _recommendationService;
@@ -63,7 +67,9 @@ class SqlitePracticeRepository implements PracticeRepository {
   }
 
   @override
-  Future<List<PracticeActivity>> getActivitiesBySkill(PracticeSkill skill) async {
+  Future<List<PracticeActivity>> getActivitiesBySkill(
+    PracticeSkill skill,
+  ) async {
     return BundledPracticeContent.allActivities
         .where((a) => a.skill == skill)
         .toList();
@@ -82,7 +88,13 @@ class SqlitePracticeRepository implements PracticeRepository {
     try {
       return BundledPracticeContent.allActivities.firstWhere((a) => a.id == id);
     } catch (_) {
-      return null;
+      try {
+        return SpeakingContent.activities
+            .firstWhere((a) => a.id == id)
+            .toPracticeActivity();
+      } catch (_) {
+        return null;
+      }
     }
   }
 
@@ -123,23 +135,20 @@ class SqlitePracticeRepository implements PracticeRepository {
 
       await _db.transaction((txn) async {
         // 1. Insert session log
-        await txn.insert(
-          PracticeSessionsTable.tableName,
-          {
-            PracticeSessionsTable.columnId: session.id,
-            PracticeSessionsTable.columnSkillType: session.skill.id,
-            PracticeSessionsTable.columnLessonId: session.activityIds.firstOrNull,
-            PracticeSessionsTable.columnScore: session.score ?? 100.0,
-            PracticeSessionsTable.columnDurationSeconds: session.durationSeconds,
-            PracticeSessionsTable.columnMetadataJson: jsonEncode({
-              'activityIds': session.activityIds,
-              'status': session.status.name,
-              'level': session.level,
-              'totalActivities': session.totalActivities,
-            }),
-            PracticeSessionsTable.columnCompletedAt: nowIso,
-          },
-        );
+        await txn.insert(PracticeSessionsTable.tableName, {
+          PracticeSessionsTable.columnId: session.id,
+          PracticeSessionsTable.columnSkillType: session.skill.id,
+          PracticeSessionsTable.columnLessonId: session.activityIds.firstOrNull,
+          PracticeSessionsTable.columnScore: session.score ?? 100.0,
+          PracticeSessionsTable.columnDurationSeconds: session.durationSeconds,
+          PracticeSessionsTable.columnMetadataJson: jsonEncode({
+            'activityIds': session.activityIds,
+            'status': session.status.name,
+            'level': session.level,
+            'totalActivities': session.totalActivities,
+          }),
+          PracticeSessionsTable.columnCompletedAt: nowIso,
+        });
 
         // 2. Only credit daily practice minutes if session was completed
         if (session.isCompleted && durationMinutes > 0) {
@@ -158,29 +167,31 @@ class SqlitePracticeRepository implements PracticeRepository {
           };
 
           if (existingRows.isEmpty) {
-            await txn.insert(
-              UserProgressTable.tableName,
-              {
-                UserProgressTable.columnDate: dateKey,
-                UserProgressTable.columnMinutesPracticed: durationMinutes,
-                UserProgressTable.columnLessonsCompleted: 1,
-                UserProgressTable.columnWordsLearned: 0,
-                skillColumn: durationMinutes,
-                UserProgressTable.columnDailyGoalMet: 0,
-              },
-            );
+            await txn.insert(UserProgressTable.tableName, {
+              UserProgressTable.columnDate: dateKey,
+              UserProgressTable.columnMinutesPracticed: durationMinutes,
+              UserProgressTable.columnLessonsCompleted: 1,
+              UserProgressTable.columnWordsLearned: 0,
+              skillColumn: durationMinutes,
+              UserProgressTable.columnDailyGoalMet: 0,
+            });
           } else {
             final currentMinutes =
-                (existingRows.first[UserProgressTable.columnMinutesPracticed] as int?) ?? 0;
+                (existingRows.first[UserProgressTable.columnMinutesPracticed]
+                    as int?) ??
+                0;
             final currentLessons =
-                (existingRows.first[UserProgressTable.columnLessonsCompleted] as int?) ?? 0;
+                (existingRows.first[UserProgressTable.columnLessonsCompleted]
+                    as int?) ??
+                0;
             final currentSkillMinutes =
                 (existingRows.first[skillColumn] as int?) ?? 0;
 
             await txn.update(
               UserProgressTable.tableName,
               {
-                UserProgressTable.columnMinutesPracticed: currentMinutes + durationMinutes,
+                UserProgressTable.columnMinutesPracticed:
+                    currentMinutes + durationMinutes,
                 UserProgressTable.columnLessonsCompleted: currentLessons + 1,
                 skillColumn: currentSkillMinutes + durationMinutes,
               },
@@ -196,7 +207,12 @@ class SqlitePracticeRepository implements PracticeRepository {
         tag: 'PracticeRepository',
       );
     } catch (e, st) {
-      AppLogger.error('Failed to save practice session', error: e, stackTrace: st, tag: 'PracticeRepository');
+      AppLogger.error(
+        'Failed to save practice session',
+        error: e,
+        stackTrace: st,
+        tag: 'PracticeRepository',
+      );
     }
   }
 
@@ -226,10 +242,14 @@ class SqlitePracticeRepository implements PracticeRepository {
 
       return rows.map((r) {
         final id = r[PracticeSessionsTable.columnId] as String? ?? '';
-        final skillStr = r[PracticeSessionsTable.columnSkillType] as String? ?? 'speaking';
-        final score = (r[PracticeSessionsTable.columnScore] as num?)?.toDouble();
-        final durationSec = (r[PracticeSessionsTable.columnDurationSeconds] as int?) ?? 0;
-        final completedAtStr = r[PracticeSessionsTable.columnCompletedAt] as String? ?? '';
+        final skillStr =
+            r[PracticeSessionsTable.columnSkillType] as String? ?? 'speaking';
+        final score = (r[PracticeSessionsTable.columnScore] as num?)
+            ?.toDouble();
+        final durationSec =
+            (r[PracticeSessionsTable.columnDurationSeconds] as int?) ?? 0;
+        final completedAtStr =
+            r[PracticeSessionsTable.columnCompletedAt] as String? ?? '';
         final completedAt = DateTime.tryParse(completedAtStr) ?? DateTime.now();
 
         Map<String, dynamic> metadata = {};
@@ -240,11 +260,15 @@ class SqlitePracticeRepository implements PracticeRepository {
           } catch (_) {}
         }
 
-        final statusStr = metadata['status'] as String? ?? PracticeSessionStatus.completed.name;
+        final statusStr =
+            metadata['status'] as String? ??
+            PracticeSessionStatus.completed.name;
         final level = metadata['level'] as String? ?? 'B1';
-        final activityIds = (metadata['activityIds'] as List<dynamic>?)?.cast<String>() ??
+        final activityIds =
+            (metadata['activityIds'] as List<dynamic>?)?.cast<String>() ??
             [(r[PracticeSessionsTable.columnLessonId] as String? ?? '')];
-        final totalActivities = metadata['totalActivities'] as int? ?? activityIds.length;
+        final totalActivities =
+            metadata['totalActivities'] as int? ?? activityIds.length;
 
         final status = PracticeSessionStatus.values.firstWhere(
           (s) => s.name == statusStr,
@@ -266,7 +290,12 @@ class SqlitePracticeRepository implements PracticeRepository {
         );
       }).toList();
     } catch (e, st) {
-      AppLogger.error('Failed to get session history', error: e, stackTrace: st, tag: 'PracticeRepository');
+      AppLogger.error(
+        'Failed to get session history',
+        error: e,
+        stackTrace: st,
+        tag: 'PracticeRepository',
+      );
       return const [];
     }
   }
@@ -288,11 +317,17 @@ class SqlitePracticeRepository implements PracticeRepository {
       );
 
       if (rows.isNotEmpty) {
-        return (rows.first[UserProgressTable.columnMinutesPracticed] as int?) ?? 0;
+        return (rows.first[UserProgressTable.columnMinutesPracticed] as int?) ??
+            0;
       }
       return 0;
     } catch (e, st) {
-      AppLogger.error('Failed to get today practice minutes', error: e, stackTrace: st, tag: 'PracticeRepository');
+      AppLogger.error(
+        'Failed to get today practice minutes',
+        error: e,
+        stackTrace: st,
+        tag: 'PracticeRepository',
+      );
       return 0;
     }
   }
@@ -307,7 +342,12 @@ class SqlitePracticeRepository implements PracticeRepository {
       );
       return (res.firstOrNull?['total'] as int?) ?? 0;
     } catch (e, st) {
-      AppLogger.error('Failed to get total practice minutes', error: e, stackTrace: st, tag: 'PracticeRepository');
+      AppLogger.error(
+        'Failed to get total practice minutes',
+        error: e,
+        stackTrace: st,
+        tag: 'PracticeRepository',
+      );
       return 0;
     }
   }

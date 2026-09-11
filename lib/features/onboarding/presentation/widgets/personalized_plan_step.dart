@@ -70,13 +70,17 @@ class PersonalizedPlanStep extends StatelessWidget {
                           width: 52,
                           height: 52,
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.primary900.withValues(alpha: 0.4) : AppColors.primary50,
+                            color: isDark
+                                ? AppColors.primary900.withValues(alpha: 0.4)
+                                : AppColors.primary50,
                             borderRadius: AppRadii.roundedLg,
                           ),
                           child: Icon(
                             Icons.timer_outlined,
                             size: AppIconSizes.lg,
-                            color: isDark ? AppColors.primary400 : AppColors.primary600,
+                            color: isDark
+                                ? AppColors.primary400
+                                : AppColors.primary600,
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md),
@@ -89,7 +93,9 @@ class PersonalizedPlanStep extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: AppFontSizes.titleMedium,
                                   fontWeight: AppFontWeights.bold,
-                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
                                 ),
                               ),
                               const SizedBox(height: 2),
@@ -97,7 +103,9 @@ class PersonalizedPlanStep extends StatelessWidget {
                                 'Aligned with your ${estimatedLevel ?? "B1"} starting benchmark',
                                 style: TextStyle(
                                   fontSize: AppFontSizes.bodySmall,
-                                  color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                                  color: isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextSecondary,
                                 ),
                               ),
                             ],
@@ -113,7 +121,9 @@ class PersonalizedPlanStep extends StatelessWidget {
                     style: TextStyle(
                       fontSize: AppFontSizes.titleSmall,
                       fontWeight: AppFontWeights.semiBold,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -123,23 +133,31 @@ class PersonalizedPlanStep extends StatelessWidget {
                       children: plan.entries.map((entry) {
                         final skill = entry.key;
                         final minutes = entry.value;
-                        final percent = dailyMinutes > 0 ? (minutes / dailyMinutes) : 0.0;
+                        final percent = dailyMinutes > 0
+                            ? (minutes / dailyMinutes)
+                            : 0.0;
 
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs + 2),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xs + 2,
+                          ),
                           child: Row(
                             children: [
                               Container(
                                 width: 34,
                                 height: 34,
                                 decoration: BoxDecoration(
-                                  color: isDark ? AppColors.slate800 : AppColors.slate100,
+                                  color: isDark
+                                      ? AppColors.slate800
+                                      : AppColors.slate100,
                                   borderRadius: AppRadii.roundedSm,
                                 ),
                                 child: Icon(
                                   _skillIcon(skill),
                                   size: 18,
-                                  color: isDark ? AppColors.primary400 : AppColors.primary600,
+                                  color: isDark
+                                      ? AppColors.primary400
+                                      : AppColors.primary600,
                                 ),
                               ),
                               const SizedBox(width: AppSpacing.md),
@@ -148,14 +166,17 @@ class PersonalizedPlanStep extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           skill,
                                           style: TextStyle(
                                             fontSize: AppFontSizes.bodyMedium,
                                             fontWeight: AppFontWeights.medium,
-                                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                            color: isDark
+                                                ? AppColors.darkTextPrimary
+                                                : AppColors.lightTextPrimary,
                                           ),
                                         ),
                                         Text(
@@ -163,7 +184,9 @@ class PersonalizedPlanStep extends StatelessWidget {
                                           style: TextStyle(
                                             fontSize: AppFontSizes.bodySmall,
                                             fontWeight: AppFontWeights.semiBold,
-                                            color: isDark ? AppColors.primary300 : AppColors.primary700,
+                                            color: isDark
+                                                ? AppColors.primary300
+                                                : AppColors.primary700,
                                           ),
                                         ),
                                       ],
@@ -172,7 +195,9 @@ class PersonalizedPlanStep extends StatelessWidget {
                                     ProgressBar(
                                       value: percent,
                                       height: 6,
-                                      color: isDark ? AppColors.primary400 : AppColors.primary600,
+                                      color: isDark
+                                          ? AppColors.primary400
+                                          : AppColors.primary600,
                                     ),
                                   ],
                                 ),
@@ -189,9 +214,13 @@ class PersonalizedPlanStep extends StatelessWidget {
                       child: TextButton.icon(
                         onPressed: onRetakeTest,
                         icon: const Icon(Icons.refresh_rounded, size: 16),
-                        label: const Text('Retake assessment or adjust benchmark'),
+                        label: const Text(
+                          'Retake assessment or adjust benchmark',
+                        ),
                         style: TextButton.styleFrom(
-                          foregroundColor: isDark ? AppColors.primary400 : AppColors.primary600,
+                          foregroundColor: isDark
+                              ? AppColors.primary400
+                              : AppColors.primary600,
                         ),
                       ),
                     ),
@@ -213,7 +242,9 @@ class PersonalizedPlanStep extends StatelessWidget {
                             'Your study streak starts today. All your lessons and progress are stored 100% offline on your device.',
                             style: TextStyle(
                               fontSize: AppFontSizes.bodySmall,
-                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.lightTextSecondary,
                               height: 1.4,
                             ),
                           ),
@@ -241,10 +272,7 @@ class PersonalizedPlanStep extends StatelessWidget {
             ),
             child: Row(
               children: [
-                SecondaryButton(
-                  label: AppStrings.back,
-                  onPressed: onBack,
-                ),
+                SecondaryButton(label: AppStrings.back, onPressed: onBack),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: PrimaryButton(

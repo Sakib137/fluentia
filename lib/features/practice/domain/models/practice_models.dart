@@ -2,14 +2,38 @@ import 'package:flutter/material.dart';
 
 /// Supported practice skills in Fluentia.
 enum PracticeSkill {
-  speaking('speaking', 'Speaking', 'Build confidence through real-world speaking.',
-      Icons.mic_rounded, 5, 'Oral Fluency'),
-  listening('listening', 'Listening', 'Improve native comprehension and rhythm.',
-      Icons.headphones_rounded, 5, 'Comprehension'),
-  reading('reading', 'Reading', 'Master contextual comprehension and flow.',
-      Icons.menu_book_rounded, 5, 'Articles & Drills'),
-  writing('writing', 'Writing', 'Express ideas with grammatical precision.',
-      Icons.edit_note_rounded, 5, 'Composition');
+  speaking(
+    'speaking',
+    'Speaking',
+    'Build confidence through real-world speaking.',
+    Icons.mic_rounded,
+    5,
+    'Oral Fluency',
+  ),
+  listening(
+    'listening',
+    'Listening',
+    'Improve native comprehension and rhythm.',
+    Icons.headphones_rounded,
+    5,
+    'Comprehension',
+  ),
+  reading(
+    'reading',
+    'Reading',
+    'Master contextual comprehension and flow.',
+    Icons.menu_book_rounded,
+    5,
+    'Articles & Drills',
+  ),
+  writing(
+    'writing',
+    'Writing',
+    'Express ideas with grammatical precision.',
+    Icons.edit_note_rounded,
+    5,
+    'Composition',
+  );
 
   const PracticeSkill(
     this.id,
@@ -84,23 +108,25 @@ class PracticeActivity {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'skill': skill.id,
-        'type': type.id,
-        'title': title,
-        'instruction': instruction,
-        'level': level,
-        'estimatedDurationMinutes': estimatedDurationMinutes,
-        'difficulty': difficulty,
-        'content': content,
-        'metadata': metadata,
-      };
+    'id': id,
+    'skill': skill.id,
+    'type': type.id,
+    'title': title,
+    'instruction': instruction,
+    'level': level,
+    'estimatedDurationMinutes': estimatedDurationMinutes,
+    'difficulty': difficulty,
+    'content': content,
+    'metadata': metadata,
+  };
 
   factory PracticeActivity.fromJson(Map<String, dynamic> json) {
     return PracticeActivity(
       id: json['id'] as String? ?? '',
       skill: PracticeSkill.fromId(json['skill'] as String? ?? 'speaking'),
-      type: PracticeActivityType.fromId(json['type'] as String? ?? 'speakingPrompt'),
+      type: PracticeActivityType.fromId(
+        json['type'] as String? ?? 'speakingPrompt',
+      ),
       title: json['title'] as String? ?? '',
       instruction: json['instruction'] as String? ?? '',
       level: json['level'] as String? ?? 'B1',
@@ -120,11 +146,11 @@ enum PracticeSessionStatus {
   abandoned;
 
   String get displayName => switch (this) {
-        notStarted => 'Not Started',
-        inProgress => 'In Progress',
-        completed => 'Completed',
-        abandoned => 'Abandoned',
-      };
+    notStarted => 'Not Started',
+    inProgress => 'In Progress',
+    completed => 'Completed',
+    abandoned => 'Abandoned',
+  };
 }
 
 /// Reusable domain model for a practice session.
@@ -195,26 +221,29 @@ class PracticeSession {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'skill': skill.id,
-        'activityIds': activityIds,
-        'level': level,
-        'startedAt': startedAt.toIso8601String(),
-        'completedAt': completedAt?.toIso8601String(),
-        'durationSeconds': durationSeconds,
-        'score': score,
-        'status': status.name,
-        'currentActivityIndex': currentActivityIndex,
-        'totalActivities': totalActivities,
-      };
+    'id': id,
+    'skill': skill.id,
+    'activityIds': activityIds,
+    'level': level,
+    'startedAt': startedAt.toIso8601String(),
+    'completedAt': completedAt?.toIso8601String(),
+    'durationSeconds': durationSeconds,
+    'score': score,
+    'status': status.name,
+    'currentActivityIndex': currentActivityIndex,
+    'totalActivities': totalActivities,
+  };
 
   factory PracticeSession.fromJson(Map<String, dynamic> json) {
     return PracticeSession(
       id: json['id'] as String? ?? '',
       skill: PracticeSkill.fromId(json['skill'] as String? ?? 'speaking'),
-      activityIds: (json['activityIds'] as List<dynamic>?)?.cast<String>() ?? const [],
+      activityIds:
+          (json['activityIds'] as List<dynamic>?)?.cast<String>() ?? const [],
       level: json['level'] as String? ?? 'B1',
-      startedAt: DateTime.tryParse(json['startedAt'] as String? ?? '') ?? DateTime.now(),
+      startedAt:
+          DateTime.tryParse(json['startedAt'] as String? ?? '') ??
+          DateTime.now(),
       completedAt: json['completedAt'] != null
           ? DateTime.tryParse(json['completedAt'] as String)
           : null,

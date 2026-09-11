@@ -6,7 +6,8 @@ const List<PlacementQuestionModel> kBundledPlacementQuestions = [
     id: 'pq_01',
     category: PlacementCategory.grammar,
     difficulty: 'A1',
-    question: 'Sarah usually ______ to work by train, but today she is driving.',
+    question:
+        'Sarah usually ______ to work by train, but today she is driving.',
     options: ['goes', 'go', 'is going', 'went'],
     correctAnswerIndex: 0,
     explanation:
@@ -36,8 +37,7 @@ const List<PlacementQuestionModel> kBundledPlacementQuestions = [
     id: 'pq_04',
     category: PlacementCategory.conversation,
     difficulty: 'A2',
-    question:
-        'A: "Would you mind helping me move this desk?"\nB: "______."',
+    question: 'A: "Would you mind helping me move this desk?"\nB: "______."',
     options: [
       'Yes, of course I mind.',
       'Not at all, let\'s lift it together.',

@@ -18,12 +18,24 @@ class PracticeRecommendationService {
     final lowerGoals = userGoals.map((g) => g.toLowerCase()).toSet();
 
     // Priority checks based on user's stated goals
-    final isCareer = lowerGoals.any((g) => g.contains('career') || g.contains('interview'));
-    final isExam = lowerGoals.any((g) => g.contains('exam') || g.contains('test') || g.contains('academic'));
-    final isSpeaking = lowerGoals.any((g) => g.contains('speaking') || g.contains('conversation') || g.contains('pronunciation'));
-    final isWritingFirst = lowerGoals.any((g) => g.contains('writing')) && !isSpeaking;
-    final isListeningFirst = lowerGoals.any((g) => g.contains('listening')) && !isSpeaking;
-    final isReadingFirst = lowerGoals.any((g) => g.contains('reading')) && !isSpeaking;
+    final isCareer = lowerGoals.any(
+      (g) => g.contains('career') || g.contains('interview'),
+    );
+    final isExam = lowerGoals.any(
+      (g) => g.contains('exam') || g.contains('test') || g.contains('academic'),
+    );
+    final isSpeaking = lowerGoals.any(
+      (g) =>
+          g.contains('speaking') ||
+          g.contains('conversation') ||
+          g.contains('pronunciation'),
+    );
+    final isWritingFirst =
+        lowerGoals.any((g) => g.contains('writing')) && !isSpeaking;
+    final isListeningFirst =
+        lowerGoals.any((g) => g.contains('listening')) && !isSpeaking;
+    final isReadingFirst =
+        lowerGoals.any((g) => g.contains('reading')) && !isSpeaking;
 
     List<PracticeSkill> baseOrder;
     if (isExam) {

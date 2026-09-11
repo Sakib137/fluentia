@@ -59,7 +59,9 @@ class FakeDatabaseService implements DatabaseService {
       if (where.contains('date = ?')) {
         results = results.where((r) => r['date'] == whereArgs.first).toList();
       } else if (where.contains('skill_type = ?')) {
-        results = results.where((r) => r['skill_type'] == whereArgs.first).toList();
+        results = results
+            .where((r) => r['skill_type'] == whereArgs.first)
+            .toList();
       } else if (where.contains('key = ?')) {
         results = results.where((r) => r['key'] == whereArgs.first).toList();
       } else if (where.contains('id = ?')) {
@@ -112,15 +114,21 @@ class FakeDatabaseService implements DatabaseService {
   }
 
   @override
-  Future<int> delete(String table, {String? where, List<Object?>? whereArgs}) async {
+  Future<int> delete(
+    String table, {
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
     final list = _tables[table] ?? [];
     final before = list.length;
     if (where != null && whereArgs != null && whereArgs.isNotEmpty) {
-      list.removeWhere((row) =>
-          row['date'] == whereArgs.first ||
-          row['key'] == whereArgs.first ||
-          row['id'] == whereArgs.first ||
-          row['skill_type'] == whereArgs.first);
+      list.removeWhere(
+        (row) =>
+            row['date'] == whereArgs.first ||
+            row['key'] == whereArgs.first ||
+            row['id'] == whereArgs.first ||
+            row['skill_type'] == whereArgs.first,
+      );
     } else {
       list.clear();
     }
@@ -128,17 +136,28 @@ class FakeDatabaseService implements DatabaseService {
   }
 
   @override
-  Future<List<Map<String, Object?>>> rawQuery(String sql, [List<Object?>? arguments]) async {
+  Future<List<Map<String, Object?>>> rawQuery(
+    String sql, [
+    List<Object?>? arguments,
+  ]) async {
     final lower = sql.toLowerCase();
     if (lower.contains('count(*)')) {
       if (lower.contains(UserProgressTable.tableName)) {
-        return [{'count': _tables[UserProgressTable.tableName]?.length ?? 0}];
+        return [
+          {'count': _tables[UserProgressTable.tableName]?.length ?? 0},
+        ];
       } else if (lower.contains(VocabularyTable.tableName)) {
-        return [{'count': _tables[VocabularyTable.tableName]?.length ?? 0}];
+        return [
+          {'count': _tables[VocabularyTable.tableName]?.length ?? 0},
+        ];
       } else if (lower.contains(PracticeSessionsTable.tableName)) {
-        return [{'count': _tables[PracticeSessionsTable.tableName]?.length ?? 0}];
+        return [
+          {'count': _tables[PracticeSessionsTable.tableName]?.length ?? 0},
+        ];
       }
-      return [{'count': 0}];
+      return [
+        {'count': 0},
+      ];
     }
     if (lower.contains('sum(minutes_practiced)')) {
       final rows = _tables[UserProgressTable.tableName] ?? [];
@@ -146,7 +165,9 @@ class FakeDatabaseService implements DatabaseService {
       for (final r in rows) {
         total += (r['minutes_practiced'] as int?) ?? 0;
       }
-      return [{'total': total}];
+      return [
+        {'total': total},
+      ];
     }
     return [];
   }
@@ -155,7 +176,9 @@ class FakeDatabaseService implements DatabaseService {
   Future<void> execute(String sql, [List<Object?>? arguments]) async {}
 
   @override
-  Future<T> transaction<T>(Future<T> Function(DatabaseService txn) action) async {
+  Future<T> transaction<T>(
+    Future<T> Function(DatabaseService txn) action,
+  ) async {
     return action(this);
   }
 }

@@ -65,9 +65,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   ) {
     switch (step) {
       case 0:
-        return WelcomeStep(
-          onGetStarted: _nextPage,
-        );
+        return WelcomeStep(onGetStarted: _nextPage);
       case 1:
         return GoalsStep(
           selectedGoals: state.selectedGoals,
@@ -117,7 +115,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           dailyMinutes: state.dailyPracticeMinutes,
           plan: state.personalizedPlan.isNotEmpty
               ? state.personalizedPlan
-              : {'Speaking': 4, 'Listening': 3, 'Vocabulary': 3, 'Grammar': 2, 'Reading': 3},
+              : {
+                  'Speaking': 4,
+                  'Listening': 3,
+                  'Vocabulary': 3,
+                  'Grammar': 2,
+                  'Reading': 3,
+                },
           selectedGoals: state.selectedGoals,
           estimatedLevel: state.estimatedLevel ?? state.currentLevel,
           onBack: _previousPage,
@@ -142,12 +146,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       child: Scaffold(
         appBar: _currentPage > 0
             ? AppBar(
-                backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                backgroundColor: isDark
+                    ? AppColors.darkBackground
+                    : AppColors.lightBackground,
                 elevation: 0,
                 scrolledUnderElevation: 0,
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back_rounded),
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                   onPressed: _previousPage,
                   tooltip: 'Back',
                 ),
@@ -156,7 +164,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   style: TextStyle(
                     fontSize: AppFontSizes.labelMedium,
                     fontWeight: AppFontWeights.medium,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 centerTitle: true,
@@ -164,7 +174,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   preferredSize: const Size.fromHeight(3),
                   child: LinearProgressIndicator(
                     value: _currentPage / (_totalSteps - 1),
-                    backgroundColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    backgroundColor: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       isDark ? AppColors.primary400 : AppColors.primary600,
                     ),

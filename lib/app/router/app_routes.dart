@@ -16,6 +16,8 @@ class AppRoutes {
 
   // Nested Practice Routes
   static const String practiceSpeaking = '/practice/speaking';
+  static const String practiceSpeakingSession = '/practice/speaking/session';
+  static const String practiceSpeakingResult = '/practice/speaking/result';
   static const String practiceListening = '/practice/listening';
   static const String practiceReading = '/practice/reading';
   static const String practiceWriting = '/practice/writing';

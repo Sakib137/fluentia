@@ -25,7 +25,8 @@ class QuickPracticeSection extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           child: SectionHeader(
             title: 'Quick Practice',
-            subtitle: 'Targeted micro-drills adapted to your learning priorities',
+            subtitle:
+                'Targeted micro-drills adapted to your learning priorities',
             leadingIcon: Icons.bolt_rounded,
           ),
         ),
@@ -119,7 +120,9 @@ class _QuickPracticeCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: AppFontSizes.titleSmall,
                             fontWeight: AppFontWeights.bold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         if (item.isPrimaryGoal) ...[
@@ -135,7 +138,9 @@ class _QuickPracticeCard extends StatelessWidget {
                                   : AppColors.sage50,
                               borderRadius: AppRadii.roundedFull,
                               border: Border.all(
-                                color: isDark ? AppColors.sage700 : AppColors.sage200,
+                                color: isDark
+                                    ? AppColors.sage700
+                                    : AppColors.sage200,
                               ),
                             ),
                             child: Text(
@@ -143,7 +148,9 @@ class _QuickPracticeCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: AppFontSizes.caption - 1,
                                 fontWeight: AppFontWeights.semiBold,
-                                color: isDark ? AppColors.sage400 : AppColors.sage700,
+                                color: isDark
+                                    ? AppColors.sage400
+                                    : AppColors.sage700,
                               ),
                             ),
                           ),
@@ -156,7 +163,9 @@ class _QuickPracticeCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: AppFontSizes.bodySmall,
                         fontWeight: AppFontWeights.medium,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -176,7 +185,9 @@ class _QuickPracticeCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.caption,
                     fontWeight: AppFontWeights.medium,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
@@ -187,7 +198,9 @@ class _QuickPracticeCard extends StatelessWidget {
             item.description,
             style: TextStyle(
               fontSize: AppFontSizes.bodySmall,
-              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+              color: isDark
+                  ? AppColors.darkTextMuted
+                  : AppColors.lightTextMuted,
             ),
           ),
           const SizedBox(height: AppSpacing.md),

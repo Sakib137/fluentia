@@ -29,7 +29,9 @@ class LeaveSessionDialog extends StatelessWidget {
         style: TextStyle(
           fontSize: AppFontSizes.titleLarge,
           fontWeight: AppFontWeights.semiBold,
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: isDark
+              ? AppColors.darkTextPrimary
+              : AppColors.lightTextPrimary,
         ),
       ),
       content: Text(
@@ -37,7 +39,9 @@ class LeaveSessionDialog extends StatelessWidget {
         style: TextStyle(
           fontSize: AppFontSizes.bodyMedium,
           height: 1.45,
-          color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+          color: isDark
+              ? AppColors.darkTextMuted
+              : AppColors.lightTextSecondary,
         ),
       ),
       actionsPadding: const EdgeInsets.symmetric(

@@ -36,9 +36,7 @@ class PlacementTestScreen extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.coral500,
-            ),
+            style: TextButton.styleFrom(foregroundColor: AppColors.coral500),
             child: const Text('Exit'),
           ),
         ],
@@ -64,7 +62,9 @@ class PlacementTestScreen extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: FluentAppBar(
-          title: state.isSubmitted ? 'Assessment Complete' : 'English Placement Test',
+          title: state.isSubmitted
+              ? 'Assessment Complete'
+              : 'English Placement Test',
           subtitle: state.isSubmitted
               ? 'Your estimated proficiency baseline'
               : 'Question ${state.currentIndex + 1} of ${state.questions.length}',
@@ -115,172 +115,216 @@ class PlacementTestScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Category & Difficulty Tag
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.primary900.withValues(alpha: 0.4) : AppColors.primary50,
-                        borderRadius: AppRadii.roundedFull,
-                      ),
-                      child: Text(
-                        question.category.displayName,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.labelSmall,
-                          fontWeight: AppFontWeights.semiBold,
-                          color: isDark ? AppColors.primary300 : AppColors.primary700,
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Text(
-                      '• Level ${question.difficulty}',
-                      style: TextStyle(
-                        fontSize: AppFontSizes.bodySmall,
-                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.md),
-                // Optional Context Passage
-                if (question.context != null) ...[
-                  AppCard(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.format_quote_rounded,
-                              size: AppIconSizes.sm,
-                              color: isDark ? AppColors.primary400 : AppColors.primary600,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Reading Passage',
-                              style: TextStyle(
-                                fontSize: AppFontSizes.labelMedium,
-                                fontWeight: AppFontWeights.semiBold,
-                                color: isDark ? AppColors.primary400 : AppColors.primary600,
-                              ),
-                            ),
-                          ],
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.primary900.withValues(alpha: 0.4)
+                              : AppColors.primary50,
+                          borderRadius: AppRadii.roundedFull,
                         ),
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          question.context!,
+                        child: Text(
+                          question.category.displayName,
                           style: TextStyle(
-                            fontSize: AppFontSizes.bodyMedium,
-                            height: 1.5,
-                            fontStyle: FontStyle.italic,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            fontSize: AppFontSizes.labelSmall,
+                            fontWeight: AppFontWeights.semiBold,
+                            color: isDark
+                                ? AppColors.primary300
+                                : AppColors.primary700,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        '• Level ${question.difficulty}',
+                        style: TextStyle(
+                          fontSize: AppFontSizes.bodySmall,
+                          color: isDark
+                              ? AppColors.darkTextMuted
+                              : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.md),
-                ],
-                // Question Stem
-                Text(
-                  question.question,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.titleMedium,
-                    fontWeight: AppFontWeights.semiBold,
-                    height: 1.35,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                // Options List
-                ...List.generate(question.options.length, (optIndex) {
-                  final optionText = question.options[optIndex];
-                  final isSelected = selectedOption == optIndex;
-                  final optionLetter = String.fromCharCode(65 + optIndex); // A, B, C, D
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => notifier.selectOption(optIndex),
-                        borderRadius: AppRadii.roundedLg,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 160),
-                          padding: const EdgeInsets.all(AppSpacing.md),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? (isDark ? AppColors.primary900.withValues(alpha: 0.3) : AppColors.primary50)
-                                : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
-                            borderRadius: AppRadii.roundedLg,
-                            border: Border.all(
-                              color: isSelected
-                                  ? (isDark ? AppColors.primary500 : AppColors.primary600)
-                                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                              width: isSelected ? 1.8 : 1.0,
-                            ),
-                          ),
-                          child: Row(
+                  // Optional Context Passage
+                  if (question.context != null) ...[
+                    AppCard(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Container(
-                                width: 34,
-                                height: 34,
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? (isDark ? AppColors.primary800 : AppColors.primary100)
-                                      : (isDark ? AppColors.slate800 : AppColors.slate100),
-                                  shape: BoxShape.circle,
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  optionLetter,
-                                  style: TextStyle(
-                                    fontSize: AppFontSizes.labelMedium,
-                                    fontWeight: AppFontWeights.bold,
-                                    color: isSelected
-                                        ? (isDark ? AppColors.primary300 : AppColors.primary700)
-                                        : (isDark ? AppColors.slate300 : AppColors.slate700),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: AppSpacing.md),
-                              Expanded(
-                                child: Text(
-                                  optionText,
-                                  style: TextStyle(
-                                    fontSize: AppFontSizes.bodyMedium,
-                                    fontWeight: isSelected ? AppFontWeights.semiBold : AppFontWeights.regular,
-                                    color: isSelected
-                                        ? (isDark ? AppColors.primary300 : AppColors.primary800)
-                                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-                                  ),
-                                ),
-                              ),
                               Icon(
-                                isSelected
-                                    ? Icons.radio_button_checked_rounded
-                                    : Icons.radio_button_unchecked_rounded,
-                                size: AppIconSizes.md,
-                                color: isSelected
-                                    ? (isDark ? AppColors.primary400 : AppColors.primary600)
-                                    : (isDark ? AppColors.slate600 : AppColors.slate300),
+                                Icons.format_quote_rounded,
+                                size: AppIconSizes.sm,
+                                color: isDark
+                                    ? AppColors.primary400
+                                    : AppColors.primary600,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Reading Passage',
+                                style: TextStyle(
+                                  fontSize: AppFontSizes.labelMedium,
+                                  fontWeight: AppFontWeights.semiBold,
+                                  color: isDark
+                                      ? AppColors.primary400
+                                      : AppColors.primary600,
+                                ),
                               ),
                             ],
                           ),
-                        ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            question.context!,
+                            style: TextStyle(
+                              fontSize: AppFontSizes.bodyMedium,
+                              height: 1.5,
+                              fontStyle: FontStyle.italic,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                }),
-              ],
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  // Question Stem
+                  Text(
+                    question.question,
+                    style: TextStyle(
+                      fontSize: AppFontSizes.titleMedium,
+                      fontWeight: AppFontWeights.semiBold,
+                      height: 1.35,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  // Options List
+                  ...List.generate(question.options.length, (optIndex) {
+                    final optionText = question.options[optIndex];
+                    final isSelected = selectedOption == optIndex;
+                    final optionLetter = String.fromCharCode(
+                      65 + optIndex,
+                    ); // A, B, C, D
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => notifier.selectOption(optIndex),
+                          borderRadius: AppRadii.roundedLg,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 160),
+                            padding: const EdgeInsets.all(AppSpacing.md),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? (isDark
+                                        ? AppColors.primary900.withValues(
+                                            alpha: 0.3,
+                                          )
+                                        : AppColors.primary50)
+                                  : (isDark
+                                        ? AppColors.darkSurface
+                                        : AppColors.lightSurface),
+                              borderRadius: AppRadii.roundedLg,
+                              border: Border.all(
+                                color: isSelected
+                                    ? (isDark
+                                          ? AppColors.primary500
+                                          : AppColors.primary600)
+                                    : (isDark
+                                          ? AppColors.darkBorder
+                                          : AppColors.lightBorder),
+                                width: isSelected ? 1.8 : 1.0,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 34,
+                                  height: 34,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? (isDark
+                                              ? AppColors.primary800
+                                              : AppColors.primary100)
+                                        : (isDark
+                                              ? AppColors.slate800
+                                              : AppColors.slate100),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    optionLetter,
+                                    style: TextStyle(
+                                      fontSize: AppFontSizes.labelMedium,
+                                      fontWeight: AppFontWeights.bold,
+                                      color: isSelected
+                                          ? (isDark
+                                                ? AppColors.primary300
+                                                : AppColors.primary700)
+                                          : (isDark
+                                                ? AppColors.slate300
+                                                : AppColors.slate700),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.md),
+                                Expanded(
+                                  child: Text(
+                                    optionText,
+                                    style: TextStyle(
+                                      fontSize: AppFontSizes.bodyMedium,
+                                      fontWeight: isSelected
+                                          ? AppFontWeights.semiBold
+                                          : AppFontWeights.regular,
+                                      color: isSelected
+                                          ? (isDark
+                                                ? AppColors.primary300
+                                                : AppColors.primary800)
+                                          : (isDark
+                                                ? AppColors.darkTextPrimary
+                                                : AppColors.lightTextPrimary),
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  isSelected
+                                      ? Icons.radio_button_checked_rounded
+                                      : Icons.radio_button_unchecked_rounded,
+                                  size: AppIconSizes.md,
+                                  color: isSelected
+                                      ? (isDark
+                                            ? AppColors.primary400
+                                            : AppColors.primary600)
+                                      : (isDark
+                                            ? AppColors.slate600
+                                            : AppColors.slate300),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
-        ),
           // Question Navigation Bar
           Container(
             padding: const EdgeInsets.symmetric(
@@ -309,10 +353,14 @@ class PlacementTestScreen extends ConsumerWidget {
                 PrimaryButton(
                   label: state.isLastQuestion ? 'Submit Test' : 'Next Question',
                   icon: Icon(
-                    state.isLastQuestion ? Icons.check_rounded : Icons.chevron_right_rounded,
+                    state.isLastQuestion
+                        ? Icons.check_rounded
+                        : Icons.chevron_right_rounded,
                     size: 18,
                   ),
-                  onPressed: state.hasAnsweredCurrent ? notifier.nextQuestion : null,
+                  onPressed: state.hasAnsweredCurrent
+                      ? notifier.nextQuestion
+                      : null,
                 ),
               ],
             ),
@@ -341,7 +389,8 @@ class PlacementTestScreen extends ConsumerWidget {
                 children: [
                   const SectionHeader(
                     title: 'Your estimated level',
-                    subtitle: 'A foundational benchmark to orient your daily study',
+                    subtitle:
+                        'A foundational benchmark to orient your daily study',
                   ),
                   const SizedBox(height: AppSpacing.md),
                   // Level Showcase Card
@@ -355,7 +404,9 @@ class PlacementTestScreen extends ConsumerWidget {
                             vertical: 10,
                           ),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.primary900.withValues(alpha: 0.5) : AppColors.primary100,
+                            color: isDark
+                                ? AppColors.primary900.withValues(alpha: 0.5)
+                                : AppColors.primary100,
                             borderRadius: AppRadii.roundedFull,
                           ),
                           child: Text(
@@ -363,7 +414,9 @@ class PlacementTestScreen extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: AppFontSizes.headlineSmall,
                               fontWeight: AppFontWeights.bold,
-                              color: isDark ? AppColors.primary300 : AppColors.primary800,
+                              color: isDark
+                                  ? AppColors.primary300
+                                  : AppColors.primary800,
                               letterSpacing: 0.5,
                             ),
                           ),
@@ -374,7 +427,9 @@ class PlacementTestScreen extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: AppFontSizes.titleLarge,
                             fontWeight: AppFontWeights.bold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xs),
@@ -382,18 +437,26 @@ class PlacementTestScreen extends ConsumerWidget {
                           'Score: ${result.correctAnswers} of ${result.totalQuestions} questions correct (${result.scorePercentage.toStringAsFixed(0)}%)',
                           style: TextStyle(
                             fontSize: AppFontSizes.bodySmall,
-                            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextMuted
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),
-                        Divider(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        Divider(
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
+                        ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           'What this means',
                           style: TextStyle(
                             fontSize: AppFontSizes.labelLarge,
                             fontWeight: AppFontWeights.semiBold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -403,7 +466,9 @@ class PlacementTestScreen extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: AppFontSizes.bodyMedium,
                             height: 1.45,
-                            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextMuted
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
@@ -416,7 +481,9 @@ class PlacementTestScreen extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: AppFontSizes.titleSmall,
                       fontWeight: AppFontWeights.semiBold,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -431,18 +498,32 @@ class PlacementTestScreen extends ConsumerWidget {
                         Color badgeColor;
                         Color textColor;
                         if (rating == 'Strong area') {
-                          badgeColor = isDark ? AppColors.sage700.withValues(alpha: 0.3) : AppColors.sage100;
-                          textColor = isDark ? AppColors.sage400 : AppColors.sage700;
+                          badgeColor = isDark
+                              ? AppColors.sage700.withValues(alpha: 0.3)
+                              : AppColors.sage100;
+                          textColor = isDark
+                              ? AppColors.sage400
+                              : AppColors.sage700;
                         } else if (rating == 'Good foundation') {
-                          badgeColor = isDark ? AppColors.primary800 : AppColors.primary100;
-                          textColor = isDark ? AppColors.primary300 : AppColors.primary700;
+                          badgeColor = isDark
+                              ? AppColors.primary800
+                              : AppColors.primary100;
+                          textColor = isDark
+                              ? AppColors.primary300
+                              : AppColors.primary700;
                         } else {
-                          badgeColor = isDark ? AppColors.warning600.withValues(alpha: 0.3) : AppColors.warning100;
-                          textColor = isDark ? AppColors.warning400 : AppColors.warning600;
+                          badgeColor = isDark
+                              ? AppColors.warning600.withValues(alpha: 0.3)
+                              : AppColors.warning100;
+                          textColor = isDark
+                              ? AppColors.warning400
+                              : AppColors.warning600;
                         }
 
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs + 2),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xs + 2,
+                          ),
                           child: Row(
                             children: [
                               Expanded(
@@ -454,7 +535,9 @@ class PlacementTestScreen extends ConsumerWidget {
                                       style: TextStyle(
                                         fontSize: AppFontSizes.bodyMedium,
                                         fontWeight: AppFontWeights.medium,
-                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
@@ -514,7 +597,8 @@ class PlacementTestScreen extends ConsumerWidget {
                 SecondaryButton(
                   label: 'Retake Test',
                   icon: const Icon(Icons.refresh_rounded, size: 18),
-                  onPressed: () => ref.read(placementTestProvider.notifier).reset(),
+                  onPressed: () =>
+                      ref.read(placementTestProvider.notifier).reset(),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
@@ -523,7 +607,9 @@ class PlacementTestScreen extends ConsumerWidget {
                     icon: const Icon(Icons.arrow_forward_rounded, size: 18),
                     onPressed: () {
                       // Save estimated level in onboarding provider
-                      ref.read(onboardingNotifierProvider.notifier).recordPlacementResult(result);
+                      ref
+                          .read(onboardingNotifierProvider.notifier)
+                          .recordPlacementResult(result);
                       _safeExit(context);
                     },
                   ),

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/router/app_routes.dart';
 import '../../../app/theme/design_system.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../shared/extensions/context_extensions.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../domain/models/practice_models.dart';
 import 'providers/practice_providers.dart';
 
 /// Production Practice Hub screen organizing quick practice and core skill modules.
@@ -60,7 +62,13 @@ class PracticeScreen extends ConsumerWidget {
                     metadata: module.metadata,
                     actionLabel: 'Start Practice',
                     isEnabled: module.isEnabled,
-                    onStart: () => context.push('/practice/${module.skill.id}/intro'),
+                    onStart: () {
+                      if (module.skill == PracticeSkill.speaking) {
+                        context.push(AppRoutes.practiceSpeaking);
+                      } else {
+                        context.push('/practice/${module.skill.id}/intro');
+                      }
+                    },
                   ),
                 );
               }),
@@ -96,13 +104,17 @@ class _QuickPracticeCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.xs + 2),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.primary900.withValues(alpha: 0.4) : AppColors.primary50,
+                      color: isDark
+                          ? AppColors.primary900.withValues(alpha: 0.4)
+                          : AppColors.primary50,
                       borderRadius: AppRadii.roundedMd,
                     ),
                     child: Icon(
                       Icons.bolt_rounded,
                       size: AppIconSizes.md,
-                      color: isDark ? AppColors.primary300 : AppColors.primary700,
+                      color: isDark
+                          ? AppColors.primary300
+                          : AppColors.primary700,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
@@ -111,7 +123,9 @@ class _QuickPracticeCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: AppFontSizes.titleMedium,
                       fontWeight: AppFontWeights.bold,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -156,14 +170,20 @@ class _QuickPracticeCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: AppFontSizes.bodySmall,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 PrimaryButton(
                   label: 'Start Quick Practice',
-                  icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
-                  onPressed: () => context.push('/practice/${activity.skill.id}/intro'),
+                  icon: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: () =>
+                      context.push('/practice/${activity.skill.id}/intro'),
                 ),
               ],
             ),
@@ -178,13 +198,18 @@ class _QuickPracticeCard extends StatelessWidget {
                   'Jump straight into a focused 5-minute daily practice drill.',
                   style: TextStyle(
                     fontSize: AppFontSizes.bodySmall,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 PrimaryButton(
                   label: 'Start Quick Practice',
-                  icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
+                  icon: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                  ),
                   onPressed: () => context.push('/practice/speaking/intro'),
                 ),
               ],

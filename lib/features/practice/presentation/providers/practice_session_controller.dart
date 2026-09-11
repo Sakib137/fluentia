@@ -73,10 +73,16 @@ class PracticeSessionController extends Notifier<PracticeSessionState> {
       }
 
       if (selectedActivities.isEmpty) {
-        final allSkillActivities = await _repository.getActivitiesBySkill(skill);
+        final allSkillActivities = await _repository.getActivitiesBySkill(
+          skill,
+        );
         if (level != null && level.isNotEmpty) {
-          final matched = allSkillActivities.where((a) => a.level.toUpperCase() == level.toUpperCase()).toList();
-          selectedActivities = matched.isNotEmpty ? matched : allSkillActivities;
+          final matched = allSkillActivities
+              .where((a) => a.level.toUpperCase() == level.toUpperCase())
+              .toList();
+          selectedActivities = matched.isNotEmpty
+              ? matched
+              : allSkillActivities;
         } else {
           selectedActivities = allSkillActivities;
         }
@@ -149,8 +155,14 @@ class PracticeSessionController extends Notifier<PracticeSessionState> {
     final now = DateTime.now();
     final elapsedSec = now.difference(current.startedAt).inSeconds;
     // Ensure duration credits at least the activity estimated duration (minimum 5 minutes or 300 seconds)
-    final estimatedSec = state.activities.fold<int>(0, (acc, a) => acc + (a.estimatedDurationMinutes * 60));
-    final durationSeconds = math.max(elapsedSec > 0 ? elapsedSec : 300, estimatedSec > 0 ? estimatedSec : 300);
+    final estimatedSec = state.activities.fold<int>(
+      0,
+      (acc, a) => acc + (a.estimatedDurationMinutes * 60),
+    );
+    final durationSeconds = math.max(
+      elapsedSec > 0 ? elapsedSec : 300,
+      estimatedSec > 0 ? estimatedSec : 300,
+    );
 
     // Calculated baseline score (or default 85.0% for placeholder engine)
     final calculatedScore = score ?? 85.0;
