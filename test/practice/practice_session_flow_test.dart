@@ -59,11 +59,11 @@ void main() {
         await pumpApp(tester);
 
         final router = container.read(routerProvider);
-        router.go('/practice/reading/intro');
+        router.go('/practice/writing/intro');
         await tester.pumpAndSettle();
 
         // 1. Intro Screen
-        expect(find.text('Reading'), findsWidgets);
+        expect(find.text('Writing'), findsWidgets);
         expect(find.text('Session Overview'), findsOneWidget);
         expect(find.text('Start Practice'), findsOneWidget);
 
@@ -121,7 +121,7 @@ void main() {
       await pumpApp(tester);
 
       final router = container.read(routerProvider);
-      router.go('/practice/reading/intro');
+      router.go('/practice/writing/intro');
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Start Practice'));

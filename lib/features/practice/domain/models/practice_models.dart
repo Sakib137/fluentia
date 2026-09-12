@@ -68,6 +68,9 @@ enum PracticeActivityType {
   fillMissingWords('fillMissingWords', 'Fill in the Missing Words'),
   listeningComprehension('listeningComprehension', 'Listening Comprehension'),
   readingComprehension('readingComprehension', 'Reading Comprehension'),
+  mainIdea('mainIdea', 'Main Idea'),
+  vocabularyInContext('vocabularyInContext', 'Vocabulary in Context'),
+  shortAnswer('shortAnswer', 'Short Answer'),
   sentenceWriting('sentenceWriting', 'Sentence Writing'),
   shortWriting('shortWriting', 'Short Writing');
 

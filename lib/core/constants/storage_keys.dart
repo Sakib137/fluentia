@@ -13,4 +13,6 @@ class StorageKeys {
   static const String lastPracticeTimestamp =
       'fluentia_last_practice_timestamp';
   static const String preferredLanguageLevel = 'fluentia_user_cefr_level';
+  static const String unfinishedReadingSession =
+      'fluentia_unfinished_reading_session';
 }

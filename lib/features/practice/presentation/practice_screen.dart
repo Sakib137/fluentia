@@ -67,6 +67,8 @@ class PracticeScreen extends ConsumerWidget {
                         context.push(AppRoutes.practiceSpeaking);
                       } else if (module.skill == PracticeSkill.listening) {
                         context.push(AppRoutes.practiceListening);
+                      } else if (module.skill == PracticeSkill.reading) {
+                        context.push(AppRoutes.practiceReading);
                       } else {
                         context.push('/practice/${module.skill.id}/intro');
                       }

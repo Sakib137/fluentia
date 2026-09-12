@@ -22,6 +22,18 @@ class AppColors {
   static const Color primaryLight = primary500;
   static const Color primaryDark = primary700;
 
+  // Teal Scale (Brand Primary Teal Palette)
+  static const Color teal50 = primary50;
+  static const Color teal100 = primary100;
+  static const Color teal200 = primary200;
+  static const Color teal300 = primary300;
+  static const Color teal400 = primary400;
+  static const Color teal500 = primary500;
+  static const Color teal600 = primary600;
+  static const Color teal700 = primary700;
+  static const Color teal800 = primary800;
+  static const Color teal900 = primary900;
+
   // Slate Neutral Scale (Surfaces & Text)
   static const Color slate50 = Color(0xFFF8FAFC);
   static const Color slate100 = Color(0xFFF1F5F9);

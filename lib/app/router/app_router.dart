@@ -21,6 +21,9 @@ import '../../features/profile/presentation/settings_screen.dart';
 import '../../features/progress/presentation/achievements_screen.dart';
 import '../../features/progress/presentation/progress_screen.dart';
 import '../../features/progress/presentation/statistics_screen.dart';
+import '../../features/reading/presentation/screens/reading_hub_screen.dart';
+import '../../features/reading/presentation/screens/reading_result_screen.dart';
+import '../../features/reading/presentation/screens/reading_session_screen.dart';
 import '../../features/speaking/presentation/speaking_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vocabulary/presentation/screens/word_detail_screen.dart';
@@ -136,8 +139,28 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'reading',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) =>
-                        const PracticeIntroScreen(skillId: 'reading'),
+                    builder: (context, state) => const ReadingHubScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'session',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) {
+                          final activityId =
+                              state.uri.queryParameters['activityId'];
+                          final modeId = state.uri.queryParameters['mode'];
+                          return ReadingSessionScreen(
+                            activityId: activityId,
+                            modeId: modeId,
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: 'result',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) =>
+                            const ReadingResultScreen(),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'writing',

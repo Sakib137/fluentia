@@ -78,7 +78,7 @@ void main() {
 
       router.go(AppRoutes.practiceReading);
       await tester.pumpAndSettle();
-      expect(find.text('Session Overview'), findsOneWidget);
+      expect(find.text('Reading Modes'), findsOneWidget);
 
       router.go(AppRoutes.practiceWriting);
       await tester.pumpAndSettle();
