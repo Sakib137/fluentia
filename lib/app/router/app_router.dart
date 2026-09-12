@@ -6,6 +6,9 @@ import '../../features/challenge/presentation/challenge_screen.dart';
 import '../../features/grammar/presentation/grammar_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/learn/presentation/learn_screen.dart';
+import '../../features/listening/presentation/screens/listening_hub_screen.dart';
+import '../../features/listening/presentation/screens/listening_result_screen.dart';
+import '../../features/listening/presentation/screens/listening_session_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/onboarding/presentation/screens/placement_test_screen.dart';
 import '../../features/practice/presentation/practice_screen.dart';
@@ -107,8 +110,28 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'listening',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) =>
-                        const PracticeIntroScreen(skillId: 'listening'),
+                    builder: (context, state) => const ListeningHubScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'session',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) {
+                          final activityId =
+                              state.uri.queryParameters['activityId'];
+                          final modeId = state.uri.queryParameters['mode'];
+                          return ListeningSessionScreen(
+                            activityId: activityId,
+                            modeId: modeId,
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: 'result',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) =>
+                            const ListeningResultScreen(),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'reading',

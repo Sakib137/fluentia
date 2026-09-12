@@ -44,6 +44,7 @@ dependencies:
   timezone: ^0.11.1
   speech_to_text: ^7.4.0
   flutter_tts: ^4.2.5
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/audio/listening/a1/
+    - assets/audio/listening/a2/
+    - assets/audio/listening/b1/
+    - assets/audio/listening/b2/
+    - assets/audio/listening/c1/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

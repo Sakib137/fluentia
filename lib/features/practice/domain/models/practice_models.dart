@@ -63,7 +63,10 @@ enum PracticeSkill {
 enum PracticeActivityType {
   speakingPrompt('speakingPrompt', 'Speaking Prompt'),
   listenAndChoose('listenAndChoose', 'Listen & Choose'),
+  trueFalse('trueFalse', 'True or False'),
   dictation('dictation', 'Dictation'),
+  fillMissingWords('fillMissingWords', 'Fill in the Missing Words'),
+  listeningComprehension('listeningComprehension', 'Listening Comprehension'),
   readingComprehension('readingComprehension', 'Reading Comprehension'),
   sentenceWriting('sentenceWriting', 'Sentence Writing'),
   shortWriting('shortWriting', 'Short Writing');

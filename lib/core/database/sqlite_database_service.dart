@@ -17,9 +17,14 @@ class SqliteDatabaseService implements DatabaseService {
 
   final sqflite.DatabaseExecutor? executor;
   sqflite.Database? _database;
+  Future<void>? _initFuture;
 
-  sqflite.DatabaseExecutor get _activeExecutor {
-    final exec = executor ?? _database;
+  Future<sqflite.DatabaseExecutor> _getExecutor() async {
+    if (executor != null) return executor!;
+    if (_database == null) {
+      await initialize();
+    }
+    final exec = _database;
     if (exec == null) {
       throw const DatabaseException(
         message: 'Database has not been initialized. Call initialize() first.',
@@ -31,7 +36,12 @@ class SqliteDatabaseService implements DatabaseService {
   @override
   Future<void> initialize() async {
     if (_database != null) return;
+    if (_initFuture != null) return _initFuture;
+    _initFuture = _doInitialize();
+    return _initFuture;
+  }
 
+  Future<void> _doInitialize() async {
     try {
       final dbPath = await sqflite.getDatabasesPath();
       final fullPath = p.join(dbPath, AppConstants.databaseName);
@@ -51,6 +61,7 @@ class SqliteDatabaseService implements DatabaseService {
 
       AppLogger.info('SQLite database successfully opened', tag: 'Database');
     } catch (e, st) {
+      _initFuture = null;
       AppLogger.error(
         'Failed to initialize SQLite database',
         error: e,
@@ -123,6 +134,7 @@ class SqliteDatabaseService implements DatabaseService {
     if (_database != null) {
       await _database!.close();
       _database = null;
+      _initFuture = null;
       AppLogger.info('SQLite database closed', tag: 'Database');
     }
   }
@@ -135,7 +147,8 @@ class SqliteDatabaseService implements DatabaseService {
     int? conflictAlgorithm,
   }) async {
     try {
-      return await _activeExecutor.insert(
+      final exec = await _getExecutor();
+      return await exec.insert(
         table,
         values,
         nullColumnHack: nullColumnHack,
@@ -166,7 +179,8 @@ class SqliteDatabaseService implements DatabaseService {
     int? offset,
   }) async {
     try {
-      return await _activeExecutor.query(
+      final exec = await _getExecutor();
+      return await exec.query(
         table,
         distinct: distinct,
         columns: columns,
@@ -196,7 +210,8 @@ class SqliteDatabaseService implements DatabaseService {
     int? conflictAlgorithm,
   }) async {
     try {
-      return await _activeExecutor.update(
+      final exec = await _getExecutor();
+      return await exec.update(
         table,
         values,
         where: where,
@@ -221,11 +236,8 @@ class SqliteDatabaseService implements DatabaseService {
     List<Object?>? whereArgs,
   }) async {
     try {
-      return await _activeExecutor.delete(
-        table,
-        where: where,
-        whereArgs: whereArgs,
-      );
+      final exec = await _getExecutor();
+      return await exec.delete(table, where: where, whereArgs: whereArgs);
     } catch (e, st) {
       throw DatabaseException(
         message: 'Delete failed on table $table: $e',
@@ -241,7 +253,8 @@ class SqliteDatabaseService implements DatabaseService {
     List<Object?>? arguments,
   ]) async {
     try {
-      return await _activeExecutor.rawQuery(sql, arguments);
+      final exec = await _getExecutor();
+      return await exec.rawQuery(sql, arguments);
     } catch (e, st) {
       throw DatabaseException(
         message: 'Raw query failed: $e',
@@ -254,7 +267,8 @@ class SqliteDatabaseService implements DatabaseService {
   @override
   Future<void> execute(String sql, [List<Object?>? arguments]) async {
     try {
-      await _activeExecutor.execute(sql, arguments);
+      final exec = await _getExecutor();
+      await exec.execute(sql, arguments);
     } catch (e, st) {
       throw DatabaseException(
         message: 'Execute failed: $e',
@@ -268,6 +282,9 @@ class SqliteDatabaseService implements DatabaseService {
   Future<T> transaction<T>(
     Future<T> Function(DatabaseService txn) action,
   ) async {
+    if (_database == null) {
+      await initialize();
+    }
     final db = _database;
     if (db == null) {
       throw const DatabaseException(

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/app.dart';
+import 'core/database/database_provider.dart';
+import 'core/database/sqlite_database_service.dart';
 import 'core/notifications/local_notification_service.dart';
 import 'core/services/preferences_service.dart';
 import 'core/utils/app_logger.dart';
@@ -26,6 +28,17 @@ void main() async {
       // Pre-initialize local persistent preferences
       final sharedPreferences = await SharedPreferences.getInstance();
 
+      // Pre-initialize SQLite database service to ensure eager readiness
+      final databaseService = SqliteDatabaseService();
+      try {
+        await databaseService.initialize();
+      } catch (e) {
+        AppLogger.warning(
+          'Database service eager initialization postponed: $e',
+          tag: 'Bootstrap',
+        );
+      }
+
       // Pre-initialize notification service
       try {
         final notificationService = LocalNotificationService();
@@ -41,6 +54,7 @@ void main() async {
         ProviderScope(
           overrides: [
             sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+            databaseServiceProvider.overrideWithValue(databaseService),
           ],
           child: const FluentiaApp(),
         ),

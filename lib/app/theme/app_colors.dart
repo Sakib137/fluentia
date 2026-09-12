@@ -62,6 +62,34 @@ class AppColors {
   static const Color error600 = Color(0xFFDC2626);
   static const Color coral500 = error500;
 
+  // Semantic Aliases
+  static const Color success50 = sage50;
+  static const Color success100 = sage100;
+  static const Color success200 = sage200;
+  static const Color success300 = sage200;
+  static const Color success400 = sage400;
+  static const Color success500 = sage500;
+  static const Color success600 = sage600;
+  static const Color success700 = sage700;
+  static const Color success800 = sage700;
+  static const Color success900 = Color(0xFF14532D);
+
+  static const Color danger50 = error50;
+  static const Color danger100 = error100;
+  static const Color danger200 = error200;
+  static const Color danger300 = error200;
+  static const Color danger400 = error400;
+  static const Color danger500 = error500;
+  static const Color danger600 = error600;
+  static const Color danger700 = Color(0xFFB91C1C);
+  static const Color danger800 = Color(0xFF991B1B);
+  static const Color danger900 = Color(0xFF7F1D1D);
+
+  static const Color warning300 = warning200;
+  static const Color warning700 = warning600;
+  static const Color warning800 = Color(0xFFB45309);
+  static const Color warning900 = Color(0xFF78350F);
+
   // Semantic - Info (Sky)
   static const Color info50 = Color(0xFFEFF6FF);
   static const Color info100 = Color(0xFFDBEAFE);
