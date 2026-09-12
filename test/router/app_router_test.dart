@@ -82,7 +82,7 @@ void main() {
 
       router.go(AppRoutes.practiceWriting);
       await tester.pumpAndSettle();
-      expect(find.text('Session Overview'), findsOneWidget);
+      expect(find.text('Practice Modes'), findsOneWidget);
 
       // Shell Tab 3: Learn
       router.go(AppRoutes.learn);

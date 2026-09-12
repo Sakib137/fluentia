@@ -12,6 +12,8 @@ import '../../features/listening/presentation/screens/listening_session_screen.d
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/onboarding/presentation/screens/placement_test_screen.dart';
 import '../../features/practice/presentation/practice_screen.dart';
+import '../../features/practice/domain/models/practice_models.dart';
+import '../../features/practice/presentation/providers/practice_providers.dart';
 import '../../features/practice/presentation/screens/practice_intro_screen.dart';
 import '../../features/practice/presentation/screens/practice_result_screen.dart';
 import '../../features/practice/presentation/screens/practice_session_screen.dart';
@@ -26,6 +28,9 @@ import '../../features/reading/presentation/screens/reading_result_screen.dart';
 import '../../features/reading/presentation/screens/reading_session_screen.dart';
 import '../../features/speaking/presentation/speaking_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
+import '../../features/writing/presentation/screens/writing_hub_screen.dart';
+import '../../features/writing/presentation/screens/writing_result_screen.dart';
+import '../../features/writing/presentation/screens/writing_session_screen.dart';
 import '../../features/vocabulary/presentation/screens/word_detail_screen.dart';
 import '../../features/vocabulary/presentation/vocabulary_screen.dart';
 import 'app_routes.dart';
@@ -165,8 +170,53 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'writing',
                     parentNavigatorKey: rootNavigatorKey,
-                    builder: (context, state) =>
-                        const PracticeIntroScreen(skillId: 'writing'),
+                    builder: (context, state) => const WritingHubScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'session',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) {
+                          final activityId =
+                              state.uri.queryParameters['activityId'];
+                          if (activityId != null && activityId.isNotEmpty) {
+                            return WritingSessionScreen(activityId: activityId);
+                          }
+                          final practiceState = ref.read(
+                            practiceSessionControllerProvider,
+                          );
+                          if (practiceState.session != null &&
+                              practiceState.session!.status ==
+                                  PracticeSessionStatus.inProgress) {
+                            return const PracticeSessionScreen(
+                              skillId: 'writing',
+                            );
+                          }
+                          return const WritingSessionScreen(activityId: '');
+                        },
+                      ),
+                      GoRoute(
+                        path: 'result',
+                        parentNavigatorKey: rootNavigatorKey,
+                        builder: (context, state) {
+                          final activityId =
+                              state.uri.queryParameters['activityId'];
+                          if (activityId != null && activityId.isNotEmpty) {
+                            return WritingResultScreen(activityId: activityId);
+                          }
+                          final practiceState = ref.read(
+                            practiceSessionControllerProvider,
+                          );
+                          if (practiceState.session != null &&
+                              practiceState.session!.status ==
+                                  PracticeSessionStatus.completed) {
+                            return const PracticeResultScreen(
+                              skillId: 'writing',
+                            );
+                          }
+                          return const WritingResultScreen(activityId: '');
+                        },
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: ':skill/intro',

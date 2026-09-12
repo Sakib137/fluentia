@@ -72,7 +72,11 @@ enum PracticeActivityType {
   vocabularyInContext('vocabularyInContext', 'Vocabulary in Context'),
   shortAnswer('shortAnswer', 'Short Answer'),
   sentenceWriting('sentenceWriting', 'Sentence Writing'),
-  shortWriting('shortWriting', 'Short Writing');
+  shortWriting('shortWriting', 'Short Writing'),
+  quickResponse('quickResponse', 'Quick Response'),
+  sentenceBuilder('sentenceBuilder', 'Sentence Builder'),
+  completeSentence('completeSentence', 'Complete the Sentence'),
+  guidedWriting('guidedWriting', 'Guided Writing');
 
   const PracticeActivityType(this.id, this.displayName);
 

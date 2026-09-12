@@ -15,4 +15,7 @@ class StorageKeys {
   static const String preferredLanguageLevel = 'fluentia_user_cefr_level';
   static const String unfinishedReadingSession =
       'fluentia_unfinished_reading_session';
+  static const String unfinishedWritingSession =
+      'fluentia_unfinished_writing_session';
+  static const String writingDraftPrefix = 'fluentia_writing_draft_';
 }
